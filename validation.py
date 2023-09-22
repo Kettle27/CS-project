@@ -16,6 +16,8 @@ class App(Frame):
         self.graphingFrame = Frame(self)
         self.signupFrame = Frame(self)
 
+        self.validate = "False"
+
 
         self.create_login_widgets()
         self.loginFrame.grid()
@@ -61,50 +63,50 @@ class App(Frame):
 
 
 
-        login_button = Button(self.loginFrame,text="          Login          ",relief="groove",command=lambda:check_login_validation()).grid(row=3,column=1,padx=100)
+        login_button = Button(self.loginFrame,text="          Login          ",relief="groove",command=lambda:self.check_login_validation()).grid(row=3,column=1,padx=100)
         or_label = Label(self.loginFrame,text="or").grid(row=4,column=1,pady=10)
         signup_button = Button(self.loginFrame,text='        sign up         ',relief="groove",command=lambda:self.create_new_login()).grid(row=5, column=1, padx=5)
 
 
-        def check_login_validation():
-            try:
-                conn = sqlite3.connect("logins.db")
-                cursor = conn.cursor()
+    def check_login_validation(self):
+        try:
+            conn = sqlite3.connect("logins.db")
+            cursor = conn.cursor()
 
 
 
 
-                statement = f"""SELECT * FROM login
-                                WHERE Username = "{self.username_entry.get()}" AND Password = "{self.password_entry.get()}" """
-                cursor.execute(statement)
+            statement = f"""SELECT * FROM login
+                            WHERE Username = "{self.username_entry.get()}" AND Password = "{self.password_entry.get()}" """
+            cursor.execute(statement)
 
 
-                if cursor.fetchall() == []:
-                    self.Error_label.config(text="Invalid Username or Password!",relief="raised",bg="red")
-                    self.username_entry.delete(0, END)
-                    self.password_entry.delete(0, END)
+            if cursor.fetchall() == []:
+                self.Error_label.config(text="Invalid Username or Password!",relief="raised",bg="red")
+                self.username_entry.delete(0, END)
+                self.password_entry.delete(0, END)
                
-                else:
-                    self.Error_label.config(text=f"Welcome back {self.username_entry.get()}",relief="raised",bg="green")
-                    self.username_entry.delete(0, END)
-                    self.password_entry.delete(0, END)
-                    self.loginFrame.grid_remove()
-                    self.graphingFrame.grid()
-                    self.create_calculator_widgets()
+            else:
+                self.Error_label.config(text=f"Welcome back {self.username_entry.get()}",relief="raised",bg="green")
+                self.username_entry.delete(0, END)
+                self.password_entry.delete(0, END)
+                self.loginFrame.grid_remove()
+                self.graphingFrame.grid()
+                self.accept()
                
 
 
-            except sqlite3.Error as err:
-                print("An error occured", err)
-            conn.close()
+        except sqlite3.Error as err:
+            print("An error occured", err)
+        conn.close()
        
     def create_new_login(self):
         self.loginFrame.grid_remove()
         self.signupFrame.grid()
 
 
-        root.title("Sign Up")
-        root.geometry("450x200")
+        win.title("Sign Up")
+        win.geometry("450x200")
 
 
 
@@ -166,8 +168,8 @@ class App(Frame):
                         self.signupFrame.grid_remove()
                         self.loginFrame.grid()
                         self.create_login_widgets()
-                        root.geometry("450x250")
-                        root.title("Login")
+                        win.geometry("450x250")
+                        win.title("Login")
                    
                     else:
                         self.Error_label.config(text="Username already exists!",relief="raised",bg="red")
@@ -185,15 +187,12 @@ class App(Frame):
                 self.username_entry.delete(0, END)
                 self.password_entry.delete(0, END)
 
+    def accept(self):
+        self.validate = "True"
+        win.destroy()
 
-
-
-
-
-    def create_calculator_widgets(self):
-        root.geometry("1200x700")
-        root.title("GraphingCalc.exe")
-
+    def __repr__(self):
+        return self.validate 
 
 
 
@@ -201,9 +200,20 @@ class App(Frame):
 
 
 
-if __name__ == "__main__":
-    root = Tk()
-    root.geometry("450x250")
-    root.title("Login")
-    app = App(root)
-    root.mainloop()
+class Validate:
+
+    def __init__(self):
+
+        global win
+        win = Tk()
+        win.geometry("450x250")
+        win.title("Login")
+        self.validate = repr(App(win))
+        print(self.validate)
+        win.mainloop()
+
+    def __repr__(self):
+        return self.validate
+    
+
+print(repr(Validate()))
