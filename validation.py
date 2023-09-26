@@ -1,9 +1,7 @@
 from tkinter import *
 import sqlite3
 import re
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import numpy as np
+
 
 
 class App(Frame):
@@ -16,8 +14,7 @@ class App(Frame):
         self.graphingFrame = Frame(self)
         self.signupFrame = Frame(self)
 
-        self.validate = "False"
-
+        self.validate = "false"
 
         self.create_login_widgets()
         self.loginFrame.grid()
@@ -188,32 +185,13 @@ class App(Frame):
                 self.password_entry.delete(0, END)
 
     def accept(self):
-        self.validate = "True"
         win.destroy()
 
-    def __repr__(self):
-        return self.validate 
 
-
-
-
-
-
-
-class Validate:
-
-    def __init__(self):
-
-        global win
-        win = Tk()
-        win.geometry("450x250")
-        win.title("Login")
-        self.validate = repr(App(win))
-        print(self.validate)
-        win.mainloop()
-
-    def __repr__(self):
-        return self.validate
-    
-
-print(repr(Validate()))
+class Valid:
+    global win
+    win = Tk()
+    win.geometry("450x250+300+300")
+    app = App(win)
+    win.overrideredirect(True)
+    win.mainloop()
