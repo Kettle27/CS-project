@@ -166,6 +166,7 @@ class App(Frame):
 
               self.fig = Figure(figsize = (8, 5), dpi = 100)
               self.ax = self.fig.add_subplot(111)
+              print(self.fig.axes)
               self.ax.axvline(color="black", linestyle="--")
               self.ax.axhline(color="black", linestyle="--")
               self.ax.set_xlim(-10, 10)
@@ -179,7 +180,7 @@ class App(Frame):
 
               self.dim_indx = self.fig.add_axes([0.9, 0.9, 0.09, 0.075])
               self.dim_indx_btn = Btn(self.dim_indx, "3D")
-              self.dim_indx_btn.on_clicked(lambda x: self.change_dim())
+              self.dim_indx_btn.on_clicked(lambda x: Index())
 
 
               toolbar = NavigationToolbar2Tk(self.fig_canvas, self.subframe2, pack_toolbar = False)
@@ -230,13 +231,6 @@ class App(Frame):
                      self.mylist.delete(is_selected[0])
                      self.plot_entry.insert(END, get_info[0])
         
-       def change_dim(self):
-             
-            if str(self.dim_indx_btn.label)[16:18] == "3D":
-                  Index()
-
-            elif str(self.dim_indx_btn.label)[16:18] == "2D":
-                  Index()
 
                 
 
@@ -259,8 +253,10 @@ class Index(App):
 
        def dim2(self):
 
-            self.ax.clear()
-            self.ax.set_axis_off()
+            self.fig.delaxes(self.fig.axes[1])
+            self.ax = self.fig.add_subplot(111)
+
+            self.fig.axes[1], self.fig.axes[0] = self.fig.axes[0], self.fig.axes[1]
 
             self.dim_indx_btn.label.set_text("3D")
             self.fig_canvas.draw()
@@ -268,10 +264,16 @@ class Index(App):
 
        def dim3(self):
 
-            self.ax.clear()
-            self.ax.set_axis_off()
+            print(self.fig.axes)
+            self.fig.delaxes(self.fig.axes[0])
+
+            print(self.fig.axes)
 
             self.ax = self.fig.add_subplot(111, projection="3d")
+
+            self.fig.axes[1], self.fig.axes[0] = self.fig.axes[0], self.fig.axes[1]
+
+            print(self.fig.axes)
 
             self.dim_indx_btn.label.set_text("2D")
 
