@@ -7,6 +7,7 @@ from matplotlib.widgets import Button as Btn
 from math import *
 # from validation import Valid
 
+
 backend_bases.NavigationToolbar2.toolitems = (
     ('Home', 'Reset original view', 'home', 'home'),
     ('Back', 'Back to  previous view', 'back', 'back'),
@@ -16,7 +17,9 @@ backend_bases.NavigationToolbar2.toolitems = (
     ('Zoom', 'Zoom to rectangle', 'zoom_to_rect', 'zoom'),
     (None, None, None, None),)
 
+
 class App(Frame):
+
 
        plotlist = []
 
@@ -25,7 +28,7 @@ class App(Frame):
               super(App, self).__init__(master)
               self.grid()
 
-              root.title('Plotting in Tkinter')
+              root.title('GraphingCalc.exe')
               root.geometry("1200x700")
 
               # Valid()
@@ -33,6 +36,7 @@ class App(Frame):
               self.main = Frame(self)
               self.launch_main()
               self.main.grid()
+
 
        def launch_main(self):
 
@@ -43,7 +47,7 @@ class App(Frame):
               self.plot_entry.place(x = 35, y = 50)
 
               self.plot_button = Button(self.subframe1, text = "Plot", width = 5, 
-              command=lambda:[self.plot_entry.config(state = NORMAL), self.plot_graph(self.plot_entry.get()), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)])
+              command=lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)])
               self.plot_button.place(x = 330, y = 185)
 
               Button(self.subframe1, text="1", width= 5,
@@ -154,34 +158,37 @@ class App(Frame):
               self.scrollbar.config( command = self.mylist.yview )
 
 
-              self.edit_button = Button(self.subframe1, text="edit",width = 22, command=lambda:self.edit_graph())
-              self.edit_button.place(x=35, y=664)
+              self.edit_button = Button(self.subframe1, text="edit",width = 22, command=
+               lambda:Graph_tools.edit_graph()
+               ).place(x=35, y=664)
 
-              self.delete_button = Button(self.subframe1, text="delete",width = 22, command=lambda:self.delete_graph())
-              self.delete_button.place(x=196, y=664)
+
+              self.delete_button = Button(self.subframe1, text="delete",width = 22, command=
+               lambda:Graph_tools.delete_graph()
+               ).place(x=196, y=664)
 
               self.subframe2 = Frame(self.main, width= 800, height=500, background="red")
               self.subframe2.pack(anchor=NW)
 
-
               self.fig = Figure(figsize = (8, 5), dpi = 100)
+
+              self.dim_indx = self.fig.add_axes([0.9, 0.9, 0.09, 0.075])
+              self.dim_indx_btn = Btn(self.dim_indx, "2D")
+              self.dim_indx_btn.on_clicked(lambda x: Index())
+
               self.ax = self.fig.add_subplot(111)
-              print(self.fig.axes)
               self.ax.axvline(color="black", linestyle="--")
               self.ax.axhline(color="black", linestyle="--")
               self.ax.set_xlim(-10, 10)
               self.ax.set_ylim(-10, 10)
+              self.ax.set_ylabel("Y")
+              self.ax.set_xlabel("X")
               self.ax.grid()
               self.ax.set_facecolor("snow")
               self.fig_canvas = FigureCanvasTkAgg(self.fig, master = self.subframe2)
 
               self.fig_canvas.draw()
               self.fig_canvas.get_tk_widget().pack()
-
-              self.dim_indx = self.fig.add_axes([0.9, 0.9, 0.09, 0.075])
-              self.dim_indx_btn = Btn(self.dim_indx, "3D")
-              self.dim_indx_btn.on_clicked(lambda x: Index())
-
 
               toolbar = NavigationToolbar2Tk(self.fig_canvas, self.subframe2, pack_toolbar = False)
               toolbar.update()
@@ -194,94 +201,113 @@ class App(Frame):
 
 
 
+class Graph_tools(App):
 
-       def plot_graph(self, fx):
 
-              try:
-                     Range = np.linspace(-50,50,2000)
-                     y = [eval(fx) for x in Range]
-                     graph = self.ax.plot(Range, y)
-                     self.fig_canvas.draw()
+       @staticmethod
+       def plot_graph(fx):
+              if str(app.dim_indx_btn.label)[16:18] == "2D":
+                     try:
+                            x = np.linspace(-50,50,2000)
+                            y = [eval(fx) for x in x]
+                            graph = app.ax.plot(x, y)
+                            app.fig_canvas.draw()
 
-                     self.plotlist.append([fx , graph])
-                     self.mylist.insert(END, f" y ={fx}")
-              except:
-                     pass
+                            app.plotlist.append([fx , graph])
+                            app.mylist.insert(END, f" y ={fx}")
+                     except:
+                            pass
 
-       def delete_graph(self):
-              is_selected = self.mylist.curselection()
+              if str(app.dim_indx_btn.label)[16:18] == "3D":
+                     try:
+                            x = np.linspace(-50,50,2000)
+                            y = [eval(fx) for x in x]
+                            graph = app.ax.plot(x, y)
+                            app.fig_canvas.draw()
+
+                            app.plotlist.append([fx , graph])
+                            app.mylist.insert(END, f" y ={fx}")
+                     except:
+                            pass
+
+
+       @staticmethod             
+       def delete_graph():
+              is_selected = app.mylist.curselection()
               if is_selected:
 
-                     get_info = self.plotlist[is_selected[0]]
-                     self.plotlist.remove(get_info)
+                     get_info = app.plotlist[is_selected[0]]
+                     app.plotlist.remove(get_info)
                      line = get_info[1].pop(0)
                      line.remove()
-                     self.fig_canvas.draw()
-                     self.mylist.delete(is_selected[0])
+                     app.fig_canvas.draw()
+                     app.mylist.delete(is_selected[0])
     
-       def edit_graph(self):
-              is_selected = self.mylist.curselection()
+
+       @staticmethod
+       def edit_graph():
+              is_selected = app.mylist.curselection()
               if is_selected:
 
-                     get_info = self.plotlist[is_selected[0]]
-                     self.plotlist.remove(get_info)
+                     get_info = app.plotlist[is_selected[0]]
+                     app.plotlist.remove(get_info)
                      line = get_info[1].pop(0)
                      line.remove()
-                     self.fig_canvas.draw()
-                     self.mylist.delete(is_selected[0])
-                     self.plot_entry.insert(END, get_info[0])
+                     app.fig_canvas.draw()
+                     app.mylist.delete(is_selected[0])
+                     app.plot_entry.insert(END, get_info[0])
         
-
-                
-
 
 class Index(App):
 
-       def __init__(self):
-            
-            self.fig = app.fig
-            self.ax = app.ax
-            self.fig_canvas = app.fig_canvas
-            self.dim_indx_btn = app.dim_indx_btn
 
-            if str(self.dim_indx_btn.label)[16:18] == "3D":
+       def __init__(self):
+
+            if str(app.dim_indx_btn.label)[16:18] == "2D":
                 self.dim3()
 
-            elif str(self.dim_indx_btn.label)[16:18] == "2D":
+            elif str(app.dim_indx_btn.label)[16:18] == "3D":
                 self.dim2()
 
 
        def dim2(self):
 
-            self.fig.delaxes(self.fig.axes[1])
-            self.ax = self.fig.add_subplot(111)
+            app.fig.delaxes(app.fig.axes[1])
 
-            self.fig.axes[1], self.fig.axes[0] = self.fig.axes[0], self.fig.axes[1]
+            app.ax = app.fig.add_subplot(111)
+            app.ax.axvline(color="black", linestyle="--")
+            app.ax.axhline(color="black", linestyle="--")
+            app.ax.set_xlim(-10, 10)
+            app.ax.set_ylim(-10, 10)
+            app.ax.set_ylabel("Y")
+            app.ax.set_xlabel("X")
+            app.ax.grid()
 
-            self.dim_indx_btn.label.set_text("3D")
-            self.fig_canvas.draw()
+            app.dim_indx_btn.label.set_text("2D")
+            app.fig_canvas.draw()
        
 
        def dim3(self):
+            app.fig.delaxes(app.fig.axes[1])
 
-            print(self.fig.axes)
-            self.fig.delaxes(self.fig.axes[0])
 
-            print(self.fig.axes)
+            app.ax = app.fig.add_subplot(111, projection="3d")
+            app.ax.set_xlim(-10, 10)
+            app.ax.set_ylim(-10, 10)
+            app.ax.set_zlim(-10, 10)
+            app.ax.set_ylabel("Y")
+            app.ax.set_xlabel("X")
+            app.ax.set_zlabel("Z")
 
-            self.ax = self.fig.add_subplot(111, projection="3d")
 
-            self.fig.axes[1], self.fig.axes[0] = self.fig.axes[0], self.fig.axes[1]
+            app.dim_indx_btn.label.set_text("3D")
 
-            print(self.fig.axes)
-
-            self.dim_indx_btn.label.set_text("2D")
-
-            self.fig_canvas.draw()
-
+            app.fig_canvas.draw()
 
 
 if __name__ == "__main__":
     root = Tk()
     app = App(root)
-    root.mainloop()
+    root.mainloop()                
+
+
