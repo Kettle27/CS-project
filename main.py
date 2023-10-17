@@ -5,6 +5,7 @@ import numpy as np
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
 from math import *
+from maths import fact
 # from validation import Valid
 
 
@@ -40,17 +41,17 @@ class App(Frame):
 
        def launch_main(self):
 
-              self.subframe1 = Frame(self.main, width= 450, height=700, background="blue")
+              self.subframe1 = Frame(self.main, width= 450, height=700, background="#3c4043")
               self.subframe1.pack(side = RIGHT, fill=Y)
 
-              self.dim2widgets()
+              self.dimwidgets()
 
               self.subframe15 = Frame(self.subframe1, width= 200, height = 300, background="black")
-              self.subframe15.place(x=35, y=500)
+              self.subframe15.place(x=10, y=276)
 
               self.scrollbar = Scrollbar(self.subframe15, width = 20)
               self.scrollbar.pack( side = RIGHT, fill=Y )
-              self.mylist = Listbox(self.subframe15, yscrollcommand= self.scrollbar.set, width= 50)
+              self.mylist = Listbox(self.subframe15, yscrollcommand= self.scrollbar.set, width= 50, font = "Arial 10", borderwidth= 6)
               self.mylist.pack( side = LEFT, fill = BOTH )
               self.scrollbar.config( command = self.mylist.yview )
 
@@ -84,298 +85,157 @@ class App(Frame):
               self.fig_canvas.get_tk_widget().pack()
 
 
-              self.subframe3 = Frame(self.main, width= 800, height=200, background="green")
+              self.subframe3 = Frame(self.main, width= 800, height=200, background="#3c4043")
               self.subframe3.pack(anchor=S)
 
-       def dim2widgets(self):
+       def dimwidgets(self):
 
-              for widget in self.subframe1.winfo_children():
-                    widget.destroy()
-             
-              self.plot_entry = Entry(self.subframe1, width=15, font= "Arial 30", state= DISABLED)
-              self.plot_entry.place(x = 35, y = 50)
+              self.plot_entry = Entry(self.subframe1, bg= "#3C4043", width=17, borderwidth= 6, font= "Arial 30", state= DISABLED)
+              self.plot_entry.place(x = 6, y = 11)
 
-              Button(self.subframe1, text="Delete", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(self.plot_entry.index("end")-1), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 110)
-        
-              Button(self.subframe1, text="Clear", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 110)
-
-              Button(self.subframe1, text="(", width= 5,
-              command= lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "("), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 110)
-        
-              Button(self.subframe1, text=")", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, ")"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 110)
-
-
-              Button(self.subframe1, text="1", width= 5,
-              command= lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "1"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 135)
-        
-              Button(self.subframe1, text="2", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "2"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 135)
-        
-              Button(self.subframe1, text="3", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "3"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 135)
-
-              Button(self.subframe1, text="4", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "4"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 160)
-
-              Button(self.subframe1, text="5", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "5"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 160)
-
-              Button(self.subframe1, text="6", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "6"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 160)
-
-              Button(self.subframe1, text="7", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "7"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 185)
-        
-              Button(self.subframe1, text="8", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "8"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 185)
-
-              Button(self.subframe1, text="9", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "9"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 185)
-        
-              self.plot_button = Button(self.subframe1, text = "Plot", width = 5, 
-              command=lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)])
-              self.plot_button.place(x = 285, y = 210)
-
-
-              Button(self.subframe1, text="0", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "0"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 210)
-              
-              Button(self.subframe1, text=".", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "."), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 210)
-              
-
-              
-              Button(self.subframe1, text="÷", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "/"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 135)
-              
-              Button(self.subframe1, text="*", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "*"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 160)
-              
-              Button(self.subframe1, text="-", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "-"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 185)
-              
-              Button(self.subframe1, text="+", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "+"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 210)
-              
-
-              Button(self.subframe1, text="^", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "**"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 110)
-
-              Button(self.subframe1, text="!", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "!"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 135)
-              
-              Button(self.subframe1, text="log", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "log"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 160)
-              
-              Button(self.subframe1, text="e", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "e"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 185)
-              
-              Button(self.subframe1, text="π", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "π"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 210)
-              
-
-
-              Button(self.subframe1, text="sin", width= 5, command= 
+              Button(self.subframe1, text="sin", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "sin"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 110)
+               ).place(x=5, y = 70)
 
-              Button(self.subframe1, text="cos", width= 5, command= 
+              Button(self.subframe1, text="cos", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "cos"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 135)
+               ).place(x=5, y = 109)
               
-              Button(self.subframe1, text="tan", width= 5, command= 
+              Button(self.subframe1, text="tan", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "tan"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 160)
+               ).place(x=5, y = 148)
               
-              Button(self.subframe1, text="x", width= 5, command= 
+              Button(self.subframe1, text="x", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "x"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 185)
+               ).place(x=5, y = 187)
               
-              #Button(self.subframe1, text="y", width= 5, command= 
-              # lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "y"), self.plot_entry.config(state = DISABLED)]
-              # ).place(x=105, y = 210)
-
-              Button(self.subframe1, text="edit",width = 22, command=
-               lambda:Graph_tools.edit_graph()
-               ).place(x=35, y=664)
-
-
-              Button(self.subframe1, text="delete",width = 22, command=
-               lambda:Graph_tools.delete_graph()
-               ).place(x=196, y=664)
-
-
-       def dim3widgets(self):
-
-              for widget in self.subframe1.winfo_children():
-                    print(widget)
-             
-              self.plot_entry = Entry(self.subframe1, width=15, font= "Arial 30", state= DISABLED)
-              self.plot_entry.place(x = 35, y = 50)
-
-              Button(self.subframe1, text="Delete", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(self.plot_entry.index("end")-1), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 110)
-        
-              Button(self.subframe1, text="Clear", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 110)
-
-              Button(self.subframe1, text="(", width= 5,
-              command= lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "("), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 110)
-        
-              Button(self.subframe1, text=")", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, ")"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 110)
-
-
-              Button(self.subframe1, text="1", width= 5,
-              command= lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "1"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 135)
-        
-              Button(self.subframe1, text="2", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "2"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 135)
-        
-              Button(self.subframe1, text="3", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "3"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 135)
-
-              Button(self.subframe1, text="4", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "4"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 160)
-
-              Button(self.subframe1, text="5", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "5"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 160)
-
-              Button(self.subframe1, text="6", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "6"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 160)
-
-              Button(self.subframe1, text="7", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "7"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 185)
-        
-              Button(self.subframe1, text="8", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "8"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 185)
-
-              Button(self.subframe1, text="9", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "9"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=285, y = 185)
-        
-              self.plot_button = Button(self.subframe1, text = "Plot", width = 5, 
-              command=lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)])
-              self.plot_button.place(x = 285, y = 210)
-
-
-              Button(self.subframe1, text="0", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "0"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=195, y = 210)
-              
-              Button(self.subframe1, text=".", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "."), self.plot_entry.config(state = DISABLED)]
-               ).place(x=240, y = 210)
-              
-
-              
-              Button(self.subframe1, text="÷", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "/"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 135)
-              
-              Button(self.subframe1, text="*", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "*"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 160)
-              
-              Button(self.subframe1, text="-", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "-"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 185)
-              
-              Button(self.subframe1, text="+", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "+"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=330, y = 210)
-              
-
-              Button(self.subframe1, text="^", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "**"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 110)
-
-              Button(self.subframe1, text="!", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "!"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 135)
-              
-              Button(self.subframe1, text="log", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "log"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 160)
-              
-              Button(self.subframe1, text="e", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "e"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 185)
-              
-              Button(self.subframe1, text="π", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "π"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=150, y = 210)
-              
-
-
-              Button(self.subframe1, text="sin", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "sin"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 110)
-
-              Button(self.subframe1, text="cos", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "cos"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 135)
-              
-              Button(self.subframe1, text="tan", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "tan"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 160)
-              
-              Button(self.subframe1, text="x", width= 5, command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "x"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 185)
-              
-              Button(self.subframe1, text="y", width= 5, command= 
+              Button(self.subframe1, text="y", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "y"), self.plot_entry.config(state = DISABLED)]
-               ).place(x=105, y = 210)
+               ).place(x=5, y = 226)
+
+
+
+              Button(self.subframe1, text="^", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "**"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=70, y = 70)
+
+              Button(self.subframe1, text="!", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "fact"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=70, y = 109)
               
-              Button(self.subframe1, text="edit",width = 22, command=
+              Button(self.subframe1, text="log", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "log"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=70, y = 148)
+              
+              Button(self.subframe1, text="e", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "e"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=70, y = 187)
+              
+              Button(self.subframe1, text="π", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "pi"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=70, y = 226)
+
+
+
+              Button(self.subframe1, text="(", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "("), self.plot_entry.config(state = DISABLED)]
+               ).place(x=135, y = 70)
+              
+              Button(self.subframe1, text="1", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "1"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=135, y = 109)
+              
+              Button(self.subframe1, text="4", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "4"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=135, y = 148)
+
+              Button(self.subframe1, text="7", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "7"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=135, y = 187)
+
+              Button(self.subframe1, text="0", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "0"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=135, y = 226)
+              
+
+
+              Button(self.subframe1, text=")", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, ")"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=200, y = 70)
+
+              Button(self.subframe1, text="2", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "2"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=200, y = 109)
+              
+              Button(self.subframe1, text="5", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "5"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=200, y = 148)
+
+              Button(self.subframe1, text="8", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "8"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=200, y = 187)
+              
+              Button(self.subframe1, text=".", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "."), self.plot_entry.config(state = DISABLED)]
+               ).place(x=200, y = 226)
+
+
+
+              Button(self.subframe1, text="Delete", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(self.plot_entry.index("end")-1), self.plot_entry.config(state = DISABLED)]
+               ).place(x=265, y = 70)
+        
+              Button(self.subframe1, text="3", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "3"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=265, y = 109)
+
+              Button(self.subframe1, text="6", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "6"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=265, y = 148)
+
+              Button(self.subframe1, text="9", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "9"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=265, y = 187)
+        
+              Button(self.subframe1, text = "Plot", width = 5, font = "Arial 15", bg = "#8ab4f8", fg = "#202124", command=
+               lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)]
+               ).place(x = 265, y = 226)
+
+
+
+              Button(self.subframe1, text="Clear", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)]
+               ).place(x=330, y = 70)
+              
+              Button(self.subframe1, text="÷", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "/"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=330, y = 109)
+              
+              Button(self.subframe1, text="*", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "*"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=330, y = 148)
+              
+              Button(self.subframe1, text="-", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "-"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=330, y = 187)
+              
+              Button(self.subframe1, text="+", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
+               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "+"), self.plot_entry.config(state = DISABLED)]
+               ).place(x=330, y = 226)
+              
+              
+
+              Button(self.subframe1, text="edit", width = 15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
                lambda:Graph_tools.edit_graph()
-               ).place(x=35, y=664)
+               ).place(x=10, y=461)
 
 
-              Button(self.subframe1, text="delete",width = 22, command=
+              Button(self.subframe1, text="delete",width = 15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
                lambda:Graph_tools.delete_graph()
-               ).place(x=196, y=664)
-              
+               ).place(x=203, y=461)
+
+
+
        
 
 
@@ -440,14 +300,28 @@ class Graph_tools(App):
        def edit_graph():
               is_selected = app.mylist.curselection()
               if is_selected:
+                     if str(app.dim_indx_btn.label)[16:18] == "2D":
+                     
+                            get_info = app.plotlist[is_selected[0]]
+                            app.plotlist.remove(get_info)
+                            line = get_info[1].pop(0)
+                            line.remove()
+                            app.fig_canvas.draw()
+                            app.mylist.delete(is_selected[0])
+                            app.plot_entry.config(state=NORMAL)
+                            app.plot_entry.insert(END, get_info[0])
+                            app.plot_entry.config(state=DISABLED)
 
-                     get_info = app.plotlist[is_selected[0]]
-                     app.plotlist.remove(get_info)
-                     line = get_info[1].pop(0)
-                     line.remove()
-                     app.fig_canvas.draw()
-                     app.mylist.delete(is_selected[0])
-                     app.plot_entry.insert(END, get_info[0])
+                     if str(app.dim_indx_btn.label)[16:18] == "3D":
+                     
+                            get_info = app.plotlist[is_selected[0]]
+                            app.plotlist.remove(get_info)
+                            get_info[1].remove()
+                            app.fig_canvas.draw()
+                            app.mylist.delete(is_selected[0])
+                            app.plot_entry.config(state=NORMAL)
+                            app.plot_entry.insert(END, get_info[0])
+                            app.plot_entry.config(state=DISABLED)
         
 
 class Index(App):
@@ -465,7 +339,6 @@ class Index(App):
        def dim2(self):
 
             app.fig.delaxes(app.fig.axes[1])
-            app.dim2widgets()
 
             app.ax = app.fig.add_subplot(111)
             app.ax.axvline(color="black", linestyle="--")
@@ -484,12 +357,10 @@ class Index(App):
 
        def dim3(self):
             app.fig.delaxes(app.fig.axes[1])
-            app.dim3widgets()
 
             app.ax = app.fig.add_subplot(111, projection="3d")
             app.ax.set_xlim(-10, 10)
             app.ax.set_ylim(-10, 10)
-            # app.ax.set_zlim(-10, 10)
             app.ax.set_ylabel("Y")
             app.ax.set_xlabel("X")
             app.ax.set_zlabel("Z")
