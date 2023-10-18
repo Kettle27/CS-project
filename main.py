@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
 from math import *
-from maths import fact
+from extension import fact
 # from validation import Valid
 
 
@@ -376,4 +376,4 @@ class Index(App):
 if __name__ == "__main__":
     root = Tk()
     app = App(root)
-    root.mainloop()                
+    root.mainloop()              
