@@ -1,5 +1,6 @@
 import math
 
+
 class fact:
 
     def __init__(self,val):
@@ -130,7 +131,33 @@ class fact:
     def __rpow__(self, other):
 
         return other ** self.fact
+    
 
+
+
+class intergration:
+
+
+    def __init__(self, equation, a, b):
+
+        super(intergration).__repr__()
+
+        self.delta_X = (b-a) / 1000
+
+        self.x_range = [a + (i * self.delta_X) for i in range(1001)]
+
+        self.trap_sum = sum([2 * eval(equation, {"x": x}) for x in self.x_range[1:-1]], eval(equation, {"x" : self.x_range[0]}) + eval(equation, {"x" : self.x_range[-1]}))
+
+        
+    def __repr__(self):
+
+        return (f"{(self.delta_X/2) * self.trap_sum:.3f}")
+    
+
+    def  __float__(self):
+
+        return (f"{(self.delta_X/2) * self.trap_sum:.3f}")
+    
 
 
 
