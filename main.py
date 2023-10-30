@@ -16,7 +16,8 @@ from math import *
 # Add my other files
 
 from extension import fact
-import validation
+from extension import intergration
+# import validation
 
 
 # Configure which matplotlib tools to use
@@ -114,108 +115,108 @@ class App(Frame):
               # Buttons below when clicked insert a value to the entry
 
               Button(self.calculatorFrame , text="sin", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "sin"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("sin"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 70)
 
               Button(self.calculatorFrame , text="cos", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "cos"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("cos"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 109)
               
               Button(self.calculatorFrame , text="tan", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "tan"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("tan"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 148)
               
               Button(self.calculatorFrame , text="x", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "x"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("x"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 187)
               
               Button(self.calculatorFrame , text="y", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "y"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("y"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 226)
 
 
 
               Button(self.calculatorFrame , text="^", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "**"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("**"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 70)
 
               Button(self.calculatorFrame , text="!", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "fact"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("fact"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 109)
               
               Button(self.calculatorFrame , text="log", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "log"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("log"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 148)
               
               Button(self.calculatorFrame , text="e", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "e"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("e"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 187)
               
               Button(self.calculatorFrame , text="π", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "pi"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("pi"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 226)
 
 
 
               Button(self.calculatorFrame , text="(", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "("), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("("), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 70)
               
               Button(self.calculatorFrame , text="1", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "1"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("1"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 109)
               
               Button(self.calculatorFrame , text="4", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "4"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("4"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 148)
 
               Button(self.calculatorFrame , text="7", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "7"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("7"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 187)
 
               Button(self.calculatorFrame , text="0", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "0"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("0"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 226)
               
 
 
               Button(self.calculatorFrame , text=")", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, ")"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push(")"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 70)
 
               Button(self.calculatorFrame , text="2", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "2"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("2"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 109)
               
               Button(self.calculatorFrame , text="5", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "5"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("5"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 148)
 
               Button(self.calculatorFrame , text="8", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "8"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("8"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 187)
               
               Button(self.calculatorFrame , text=".", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "."), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("."), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 226)
 
 
               # button below deletes the end string if there is one
 
               Button(self.calculatorFrame , text="Delete", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(self.plot_entry.index("end")-1), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL), entry_stack.pop(), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 70)
         
               Button(self.calculatorFrame , text="3", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "3"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("3"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 109)
 
               Button(self.calculatorFrame , text="6", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "6"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("6"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 148)
 
               Button(self.calculatorFrame , text="9", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "9"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("9"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 187)
               
 
@@ -223,30 +224,30 @@ class App(Frame):
               # button also clears plot_entry
         
               Button(self.calculatorFrame , text = "Plot", width = 5, font = "Arial 15", bg = "#8ab4f8", fg = "#202124", command=
-               lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)]
+               lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
                ).place(x = 265, y = 226)
 
 
               # button below clears plot_entry
 
               Button(self.calculatorFrame , text="Clear", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL), self.plot_entry.delete(0, END), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL), entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 70)
               
               Button(self.calculatorFrame , text="÷", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "/"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("/"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 109)
               
               Button(self.calculatorFrame , text="*", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "*"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("*"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 148)
               
               Button(self.calculatorFrame , text="-", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "-"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("-"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 187)
               
               Button(self.calculatorFrame , text="+", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) ,self.plot_entry.insert(END, "+"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("+"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 226)
               
               
@@ -456,7 +457,7 @@ class Graph_tools(App):
                             app.fig_canvas.draw()
                             app.mylist.delete(is_selected[0])
                             app.plot_entry.config(state=NORMAL)
-                            app.plot_entry.insert(END, get_info[0])
+                            entry_stack.push(get_info[0])
                             app.plot_entry.config(state=DISABLED)
 
                      if str(app.dim_indx_btn.label)[16:18] == "3D":
@@ -467,7 +468,7 @@ class Graph_tools(App):
                             app.fig_canvas.draw()
                             app.mylist.delete(is_selected[0])
                             app.plot_entry.config(state=NORMAL)
-                            app.plot_entry.insert(END, get_info[0])
+                            entry_stack.push(get_info[0])
                             app.plot_entry.config(state=DISABLED)
         
 
@@ -520,7 +521,48 @@ class Index(App):
             app.fig_canvas.draw()
 
 
+
+
+class entry_stack:
+
+
+    stack = []
+
+
+    def __len__(self):
+
+        return len(self.stack)
+
+
+    @staticmethod
+    def push(val):
+        
+        entry_stack.stack.append(val)
+        app.plot_entry.insert(END, val)
+
+
+    @staticmethod
+    def pop():
+
+        if len(entry_stack.stack) > 0:
+            
+            app.plot_entry.delete(app.plot_entry.index("end") - len(entry_stack.stack[-1]), END)
+            entry_stack.stack.pop(-1)
+
+   
+    def pull():
+        
+        if len(entry_stack.stack) > 0:
+            
+            app.plot_entry.delete(0, END)
+            entry_stack.stack.clear()
+           
+
+
+
+
+
 if __name__ == "__main__":
     root = Tk()
     app = App(root)
-    root.mainloop()              
+    root.mainloop()
