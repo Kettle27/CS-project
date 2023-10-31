@@ -1,5 +1,6 @@
-# Computer Science Project 
-# Author - George Sil
+
+'''Computer Science Project 
+Author - George Sil'''
 
 
 # Add all needed Libraries
@@ -42,7 +43,9 @@ class App(Frame):
 
        plotlist = []
 
+
        def __init__(self, master):
+
               super(App, self).__init__(master)
               self.grid()
 
@@ -105,14 +108,14 @@ class App(Frame):
        def dimwidgets(self):
 
 
-              # plot_entry holds the equation for the graph
-              # plot_entry is disabled so that you can only input when to press the calculator buttons
+              '''plot_entry holds the equation for the graph
+              plot_entry is disabled so that you can only input when to press the calculator buttons'''
 
               self.plot_entry = Entry(self.calculatorFrame , bg= "#3C4043", width=17, borderwidth= 6, font= "Arial 30", state= DISABLED)
               self.plot_entry.place(x = 6, y = 11)
 
 
-              # Buttons below when clicked insert a value to the entry
+              '''Buttons below when clicked insert a value to the entry using the entry_stack class'''
 
               Button(self.calculatorFrame , text="sin", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("sin"), self.plot_entry.config(state = DISABLED)]
@@ -137,7 +140,7 @@ class App(Frame):
 
 
               Button(self.calculatorFrame , text="^", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("**"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("^"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 70)
 
               Button(self.calculatorFrame , text="!", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
@@ -251,8 +254,8 @@ class App(Frame):
                ).place(x=330, y = 226)
               
               
-              # button below allows the user to edit a graph that is selected in the Tkinter Listbox
-              # button calls staticmethod edit_graph from the class Graph_tools
+              '''button below allows the user to edit a graph that is selected in the Tkinter Listbox
+              button calls staticmethod edit_graph from the class Graph_tools'''
 
               Button(self.calculatorFrame , text="edit", width = 15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
                lambda:Graph_tools.edit_graph()
@@ -267,16 +270,17 @@ class App(Frame):
                ).place(x=203, y=461)
               
 
-              # added Tkinter Scrollbar to scroll on the Listbox if needed
-              # Tkinter Scrollbar is attacted to the entire right side of the Listbox
+              '''added Tkinter Scrollbar to scroll on the Listbox if needed
+              Tkinter Scrollbar is attacted to the entire right side of the Listbox'''
 
               self.scrollbar = Scrollbar(self.calculatorFrame2 , width = 20)
               self.scrollbar.pack( side = RIGHT, fill=Y )
 
 
-              # create Tkinter Listbox in calculatorFrame2 subframe
-              # allow the scrollbar to scroll the listbox if needed
-              # config Listbox command after Listbox is created because command calls itself
+              '''create Tkinter Listbox in calculatorFrame2 subframe
+              allow the scrollbar to scroll the listbox if needed
+              config Listbox command after Listbox is created because command calls itself 
+              '''
 
               self.mylist = Listbox(self.calculatorFrame2 , yscrollcommand= self.scrollbar.set, width= 50, font = "Arial 10", borderwidth= 6)
               self.mylist.pack(side = LEFT, fill = BOTH )
@@ -371,10 +375,11 @@ class Graph_tools(App):
                             x = np.linspace(-50,50,2000)
 
 
-                            # list comprehension is used to iterate through x
-                            # eval(fx) will use the string in fx as an expression 
-                            # this means the iterated value of x will be substituted into the expression
-                            # after this is calculated it appends the number into the new list
+                            '''list comprehension is used to iterate through x
+                            eval(fx) will use the string in fx as an expression 
+                            this means the iterated value of x will be substituted into the expression
+                            after this is calculated it appends the number into the new list'''
+
 
                             y = [eval(fx) for x in x]
 
@@ -527,6 +532,17 @@ class entry_stack:
 
 
     stack = []
+    dic = {"fact" : "fact",
+           "sin" : "sin", "cos": "cos", 
+           "tan" : "tan", "log" : "log",
+           "e" : "e", "pi" : "pi",
+           "x" : "x", "y" : "y",
+           "(" : "(", ")" : ")",
+           "1" : "1", "2" : "2", "3" : "3",
+           "4" : "4", "5" : "5", "6" : "6",
+           "7" : "7", "8" : "8", "9" : "9",
+           "." : ".", "/" : "/", "*" : "*",
+           "-" : "-", "+" : "+", "^" : "**",}
 
 
     def __len__(self):
@@ -537,8 +553,8 @@ class entry_stack:
     @staticmethod
     def push(val):
         
-        entry_stack.stack.append(val)
-        app.plot_entry.insert(END, val)
+        entry_stack.stack.append(entry_stack.dic[val])
+        app.plot_entry.insert(END, entry_stack.dic[val])
 
 
     @staticmethod
@@ -549,13 +565,18 @@ class entry_stack:
             app.plot_entry.delete(app.plot_entry.index("end") - len(entry_stack.stack[-1]), END)
             entry_stack.stack.pop(-1)
 
-   
+    @staticmethod
     def pull():
         
         if len(entry_stack.stack) > 0:
             
             app.plot_entry.delete(0, END)
             entry_stack.stack.clear()
+
+
+    @staticmethod
+    def strip_push():
+          pass
            
 
 
