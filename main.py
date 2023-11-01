@@ -16,8 +16,7 @@ from math import *
 
 # Add my other files
 
-from extension import fact
-from extension import intergration
+from extension import *
 # import validation
 
 
@@ -372,7 +371,7 @@ class Graph_tools(App):
 
                             # np.linspace will make a numpy array with 2000 numbers between -50 and 50
 
-                            x = np.linspace(-50,50,2000)
+                            x = range_x(-50, 50, 2000)
 
 
                             '''list comprehension is used to iterate through x
@@ -411,7 +410,7 @@ class Graph_tools(App):
                      # if it fails it does not plot anything
 
                      try:
-                            x = y = np.linspace(-10, 10, 100)
+                            x = y = range_x(-10, 10, 100)
                             X, Y = np.meshgrid(x, y)
                             zs = np.array([eval(fx) for x,y in zip(X,Y)])
                             Z = zs.reshape(X.shape)
@@ -462,7 +461,7 @@ class Graph_tools(App):
                             app.fig_canvas.draw()
                             app.mylist.delete(is_selected[0])
                             app.plot_entry.config(state=NORMAL)
-                            entry_stack.push(get_info[0])
+                            entry_stack.strip_push(get_info[0])
                             app.plot_entry.config(state=DISABLED)
 
                      if str(app.dim_indx_btn.label)[16:18] == "3D":
@@ -473,7 +472,7 @@ class Graph_tools(App):
                             app.fig_canvas.draw()
                             app.mylist.delete(is_selected[0])
                             app.plot_entry.config(state=NORMAL)
-                            entry_stack.push(get_info[0])
+                            entry_stack.strip_push(get_info[0])
                             app.plot_entry.config(state=DISABLED)
         
 
@@ -532,6 +531,8 @@ class entry_stack:
 
 
     stack = []
+
+    
     dic = {"fact" : "fact",
            "sin" : "sin", "cos": "cos", 
            "tan" : "tan", "log" : "log",
@@ -575,9 +576,17 @@ class entry_stack:
 
 
     @staticmethod
-    def strip_push():
-          pass
-           
+    def strip_push(val):
+          
+          string = ""
+
+          for char in val:
+                string += char
+
+                if string in entry_stack.dic:
+                      entry_stack.push(string)
+                      string = ""
+                           
 
 
 
