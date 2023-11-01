@@ -306,3 +306,38 @@ class range_x:
     def __len__(self):
 
         return len(self.x_range)
+    
+
+
+
+"""fig = plt.figure()
+ax = fig.add_subplot()
+
+
+fx = "1/x"
+
+X = range_x(-5, 5, 10)
+
+y = []
+for x in X:
+    try:
+        eval(fx)
+        y.append(eval(fx))
+    
+    except ZeroDivisionError:
+        print(x)
+        X.remove(x)
+
+
+
+
+
+# y = [eval(fx) for x in x if eval(fx) != ZeroDivisionError]
+
+print(X)
+print(y)
+
+#graph = ax.plot(X, y)
+
+plt.show()
+"""
