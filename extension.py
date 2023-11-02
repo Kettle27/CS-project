@@ -1,5 +1,6 @@
+from math import *
 import math
-import numpy as np
+
 
 
 
@@ -181,7 +182,7 @@ class log:
 
         if self.val > 0:
 
-            self.log = np.log(self.val)
+            self.log = math.log(self.val)
         
         else:
 
@@ -194,7 +195,6 @@ class log:
     
 
     def  __float__(self):
-
         return float(self.log)
     
 
@@ -310,34 +310,6 @@ class range_x:
 
 
 
-"""fig = plt.figure()
-ax = fig.add_subplot()
-
-
-fx = "1/x"
-
-X = range_x(-5, 5, 10)
-
-y = []
-for x in X:
-    try:
-        eval(fx)
-        y.append(eval(fx))
     
-    except ZeroDivisionError:
-        print(x)
-        X.remove(x)
 
 
-
-
-
-# y = [eval(fx) for x in x if eval(fx) != ZeroDivisionError]
-
-print(X)
-print(y)
-
-#graph = ax.plot(X, y)
-
-plt.show()
-"""
