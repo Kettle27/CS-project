@@ -269,6 +269,10 @@ class App(Frame):
                ).place(x=203, y=461)
               
 
+              Button(self.meta_dataFrame, text = "rotate", width=15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
+               lambda:rotation_matrix([1],[2],90)
+               ).place(x=100,y=100)
+
               '''added Tkinter Scrollbar to scroll on the Listbox if needed
               Tkinter Scrollbar is attacted to the entire right side of the Listbox'''
 
@@ -586,6 +590,49 @@ class entry_stack:
                 if string in entry_stack.dic:
                       entry_stack.push(string)
                       string = ""
+
+
+class rotation_matrix:
+
+
+    def __init__(self, X, Y, θ):
+
+       is_selected = app.mylist.curselection()
+       if is_selected:
+              if str(app.dim_indx_btn.label)[16:18] == "2D":
+
+                     get_info = app.plotlist[is_selected[0]]
+                     print(get_info)
+
+                     X = range_x(-50, 50, 2000)
+
+                     Y = [eval(get_info[0]) for x in X]
+
+                     self.rot_x = [x*cos(θ) - y*cos(θ) for x, y in zip(X, Y)]
+                     self.rot_y = [x*sin(θ) + y*cos(θ) for x, y in zip(X, Y)]
+
+                     self.rotation_matrix = [self.rot_x,self.rot_y]
+
+                     Graph_tools.delete_graph()
+
+       
+       else:
+             self.rotation_matrix = None
+
+
+
+    def __repr__(self):
+
+        return f"{self.rotation_matrix}"
+    
+
+    def __getitem__(self, val):
+
+        return self.rotation_matrix[val]  
+
+
+
+
                            
 
 
