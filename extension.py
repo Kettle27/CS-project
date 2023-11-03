@@ -308,8 +308,102 @@ class range_x:
         return len(self.x_range)
     
 
+class remove:
 
+    def __init__(self):
+        pass
 
     
 
 
+
+lis = ["a","b","c","d"]
+remove()
+
+class MergeSort:
+
+    def __init__(self,List):
+
+        self.List = List
+    
+        self.sorted = self.sort(self.List)
+
+    @classmethod
+    def sort(cls,List):
+
+        if len(List) == 1:
+            return List
+
+        midpoint = len(List) // 2
+        print(midpoint)
+        left = List[:midpoint]
+        right = List[midpoint:]
+        print(left)
+        print(right)
+        return cls.merge(left, right)
+
+
+    @staticmethod
+    def merge(left, right):
+        output = []
+        i = j = 0
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                output.append(left[i])
+                i += 1
+            else:
+                output.append(right[j])
+                j += 1
+        output.extend(left[i:])
+        output.extend(right[j:])
+
+        return output
+    
+    #def __len__(self):
+
+    #    return len(self.List)
+    
+    def __getitem__(self, val):
+
+        return self.List[val]
+
+    def __repr__(self):
+        
+        return f"{self.sorted}"
+
+
+def randomNumbers():
+    List = [random.randint(1,100) for i in range(6)]
+    print(MergeSort(List))
+
+randomNumbers()
+    
+
+def MergeSort(List):
+    
+    if len(List) == 1:
+        return List
+
+    midpoint = len(List) // 2
+    left = MergeSort(List[:midpoint])
+    right = MergeSort(List[midpoint:])
+    return merge(left, right)
+
+
+"""
+def merge(left, right):
+    output = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            output.append(left[i])
+            i += 1
+        else:
+            output.append(right[j])
+            j += 1
+    output.extend(left[i:])
+    output.extend(right[j:])
+
+    return output
+
+"""
