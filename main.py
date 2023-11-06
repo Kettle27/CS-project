@@ -269,9 +269,15 @@ class App(Frame):
                ).place(x=203, y=461)
               
 
-              Button(self.meta_dataFrame, text = "rotate", width=15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
-               lambda:rotation_matrix([1],[2],90)
-               ).place(x=100,y=100)
+              self.slider = Scale(self.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+               lambda x :dim2_rotation_matrix())
+              
+              self.slider.place(x=10,y=10)
+
+
+              """Button(self.meta_dataFrame, text = "rotate", width=15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
+               lambda:rotation_matrix()
+               ).place(x=100,y=100)"""
 
               '''added Tkinter Scrollbar to scroll on the Listbox if needed
               Tkinter Scrollbar is attacted to the entire right side of the Listbox'''
@@ -389,7 +395,7 @@ class Graph_tools(App):
 
                             # then plot the values of x and y into matplotlib
 
-                            graph = app.ax.plot(x, y)
+                            graph = app.ax.plot(x, y, color = "r")
                             app.fig_canvas.draw()
 
 
@@ -414,15 +420,19 @@ class Graph_tools(App):
                      # if it fails it does not plot anything
 
                      try:
-                            x = y = range_x(-10, 10, 100)
-                            X, Y = np.meshgrid(x, y)
-                            zs = np.array([eval(fx) for x,y in zip(X,Y)])
-                            Z = zs.reshape(X.shape)
+                            x = range_x(-10, 10, 100)
 
-                            graph = app.ax.plot_surface(X,Y,Z)
+                            X = ([x for i in x])
+
+                            Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
+
+                            Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
+                            graph = app.ax.plot_surface(X,Y,Z, color = "r")
                             app.fig_canvas.draw()
 
                             app.plotlist.append([fx , graph])
+
                             app.mylist.insert(END, f" z = {fx}")
                      except:
                             pass
@@ -509,6 +519,15 @@ class Index(App):
             app.plotlist = []
             app.mylist.delete(0, END)
             app.fig_canvas.draw()
+
+            app.x_slider.destroy()
+            app.y_slider.destroy()
+            app.z_slider.destroy()
+
+            app.slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+             lambda x :dim2_rotation_matrix.rotate_x())
+              
+            app.slider.place(x=10,y=10)
        
 
        def dim3(self):
@@ -527,6 +546,24 @@ class Index(App):
             app.mylist.delete(0, END)
 
             app.fig_canvas.draw()
+
+            app.slider.destroy()
+
+            app.x_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+             lambda x :dim3_rotation_matrix.rotate_x())
+              
+            app.x_slider.place(x=10,y=10)
+
+            app.y_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+             lambda x :dim3_rotation_matrix.rotate_y())
+              
+            app.y_slider.place(x=220,y=10)
+
+
+            app.z_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+             lambda x :dim3_rotation_matrix.rotate_z())
+              
+            app.z_slider.place(x=430,y=10)
 
 
 
@@ -592,48 +629,153 @@ class entry_stack:
                       string = ""
 
 
-class rotation_matrix:
 
 
-    def __init__(self, X, Y, θ):
 
+class dim2_rotation_matrix:
+
+
+    def __init__(self):
+ 
        is_selected = app.mylist.curselection()
        if is_selected:
-              if str(app.dim_indx_btn.label)[16:18] == "2D":
+
+              get_info = app.plotlist[is_selected[0]]
+
+              X = range_x(-50, 50, 2000)
+
+              Y = [eval(get_info[0]) for x in X]
+
+              θ = (app.slider.get() * (pi/180))
+
+
+              self.rot_x = [x*cos(θ) - y*sin(θ) for x, y in zip(X, Y)]
+              self.rot_y = [x*sin(θ) + y*cos(θ) for x, y in zip(X, Y)]
+
+
+              app.plotlist.remove(get_info)
+              line = get_info[1].pop()
+              line.remove()
+              
+              
+              graph = app.ax.plot(self.rot_x, self.rot_y, color = "r")
+
+              app.fig_canvas.draw()
+
+
+              app.plotlist.append([get_info[0] , graph])
+
+
+
+class dim3_rotation_matrix:
+      
+      @staticmethod
+      def rotate_z():
+              
+              is_selected = app.mylist.curselection()
+
+              if is_selected:
 
                      get_info = app.plotlist[is_selected[0]]
-                     print(get_info)
 
-                     X = range_x(-50, 50, 2000)
+                     x = range_x(-10, 10, 10)
 
-                     Y = [eval(get_info[0]) for x in X]
+                     X = ([x for i in x])
 
-                     self.rot_x = [x*cos(θ) - y*cos(θ) for x, y in zip(X, Y)]
-                     self.rot_y = [x*sin(θ) + y*cos(θ) for x, y in zip(X, Y)]
+                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
 
-                     self.rotation_matrix = [self.rot_x,self.rot_y]
+                     Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
 
-                     Graph_tools.delete_graph()
-
-       
-       else:
-             self.rotation_matrix = None
+                     θ = app.z_slider.get() * (pi/180)
 
 
+                     rot_x = [[x*cos(θ) - y*sin(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
+                     rot_y = [[x*sin(θ) + y*cos(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
+                     rot_z = Z
 
-    def __repr__(self):
-
-        return f"{self.rotation_matrix}"
-    
-
-    def __getitem__(self, val):
-
-        return self.rotation_matrix[val]  
+                     app.plotlist.remove(get_info)
+                     get_info[1].remove()
 
 
+                     graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
 
 
-                           
+                     app.fig_canvas.draw()
+
+                     app.plotlist.append([get_info[0] , graph])
+
+
+      @staticmethod
+      def rotate_y():
+              
+              is_selected = app.mylist.curselection()
+
+              if is_selected:
+
+                     get_info = app.plotlist[is_selected[0]]
+
+                     x = range_x(-10, 10, 10)
+
+                     X = ([x for i in x])
+
+                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
+
+                     Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
+                     θ = app.y_slider.get() * (pi/180)
+
+
+                     rot_x = [[x*cos(θ) + z*sin(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))]
+                     rot_y = Y
+                     rot_z = np.array([[-x*sin(θ) + z*cos(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))])
+
+                     app.plotlist.remove(get_info)
+                     get_info[1].remove()
+
+
+                     graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
+
+
+                     app.fig_canvas.draw()
+
+                     app.plotlist.append([get_info[0] , graph])
+
+
+
+      @staticmethod
+      def rotate_x():
+              
+              is_selected = app.mylist.curselection()
+
+              if is_selected:
+
+                     get_info = app.plotlist[is_selected[0]]
+
+                     x = range_x(-10, 10, 10)
+
+                     X = ([x for i in x])
+
+                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
+
+                     Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
+                     θ = app.x_slider.get() * (pi/180)
+
+
+                     rot_x = X
+                     rot_y = [[y*cos(θ) - z*sin(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))]
+                     rot_z = np.array([[y*sin(θ) + z*cos(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))])
+
+                     app.plotlist.remove(get_info)
+                     get_info[1].remove()
+
+
+                     graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
+
+
+                     app.fig_canvas.draw()
+
+                     app.plotlist.append([get_info[0] , graph])
 
 
 
