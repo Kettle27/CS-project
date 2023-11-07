@@ -275,10 +275,6 @@ class App(Frame):
               self.slider.place(x=10,y=10)
 
 
-              """Button(self.meta_dataFrame, text = "rotate", width=15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
-               lambda:rotation_matrix()
-               ).place(x=100,y=100)"""
-
               '''added Tkinter Scrollbar to scroll on the Listbox if needed
               Tkinter Scrollbar is attacted to the entire right side of the Listbox'''
 
@@ -378,16 +374,20 @@ class Graph_tools(App):
 
                      try:
 
+                            """How 2D plotting works:
+                               ----------------------------------------------
+                               we get a list with 2000 elements between -50 and 50
+                               this is used as our x values
 
-                            # np.linspace will make a numpy array with 2000 numbers between -50 and 50
+                               list comprehension is used to iterate through x
+                               eval(fx) will use the string in fx as an expression 
+                               this means the iterated value of x will be substituted into the expression
+                               after this is calculated it appends the number into the new list
+                            """
+                            
 
+                            
                             x = range_x(-50, 50, 2000)
-
-
-                            '''list comprehension is used to iterate through x
-                            eval(fx) will use the string in fx as an expression 
-                            this means the iterated value of x will be substituted into the expression
-                            after this is calculated it appends the number into the new list'''
 
 
                             y = [eval(fx) for x in x]
@@ -420,6 +420,38 @@ class Graph_tools(App):
                      # if it fails it does not plot anything
 
                      try:
+
+                            """How 3d plotting works:
+                            -----------------------------------------------------------------------------------------------
+                            First we get a list with 100 elements between -10,10 (100 has been chosen to maintain lag).
+                            Next we use this list to make a matrix (X) which has the size: length of list x length of list
+                            we use matrix X as the x values of our graph.
+
+                            After we make a new matrix (Y) which is the transposed matrix of matrix X
+                            transposing a matrix switches the row and columns of a matrix.
+
+                            For example:
+
+                            X = [1,2,3]    Y = [3,3,3]
+                                [1,2,3]        [2,2,2]
+                                [1,2,3]        [1,1,1]
+
+                            Finally we can get our z values by subbing in X and Y into the equation given.
+                            To do this we need to iterate through the matricies and adding the values into a new matrix (Z).
+
+                            For example using the function z = x + y:
+
+                            X = [1,2,3]    Y = [1,1,1]    Z = [2,3,4]
+                                [1,2,3]        [2,2,2]        [3,4,5]
+                                [1,2,3]        [3,3,3]        [4,5,6]
+
+                            Once we have the matricies X,Y,Z we can now plot our graph
+                            which uses the matplotlib plot_surface function
+                            -----------------------------------------------------------------------------------------------
+                            """
+
+
+                            
                             x = range_x(-10, 10, 100)
 
                             X = ([x for i in x])
