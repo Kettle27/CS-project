@@ -1,9 +1,9 @@
-
 '''Computer Science Project 
 Author - George Sil'''
 
 
 # Add all needed Libraries
+
 
 from tkinter import *
 from matplotlib.figure import Figure
@@ -16,12 +16,14 @@ from math import *
 
 # Add my other files
 
+
 from extension import *
 # import validation
 
 
 # Configure which matplotlib tools to use
 # Currently - Home, Back, Forward, Pan, Zoom
+
 
 backend_bases.NavigationToolbar2.toolitems = (
     ('Home', 'Reset original view', 'home', 'home'),
@@ -33,17 +35,20 @@ backend_bases.NavigationToolbar2.toolitems = (
 
 # Create class called App to be the main Tkinter Frame
 
+
 class App(Frame):
+       
+       
+       """create class attribute list called plotlist
+       plotlist is going to hold information about all current plots
+       going to implement this to be in a database"""
 
-
-       # create class attribute list called plotlist
-       # plotlist is going to hold information about all current plots
-       # going to implement this to be in a database
 
        plotlist = []
 
 
        def __init__(self, master):
+
 
               super(App, self).__init__(master)
               self.grid()
@@ -51,10 +56,12 @@ class App(Frame):
 
               # title of program
 
+
               root.title('GraphingCalc.exe')
 
 
               # dimentions of the screen (in pixels)
+
 
               root.geometry("1200x700")
 
@@ -62,6 +69,7 @@ class App(Frame):
               # grid the main Frame as self.main
               # call method self.launch_main to add widgets and subframes to main Frame
     
+
               self.main = Frame(self)
               self.launch_main()
               self.main.grid()
@@ -74,6 +82,7 @@ class App(Frame):
 
 
               # calculatorFrame holds all the calculator Tkinter buttons and a Tkinter entries
+
 
               self.calculatorFrame = Frame(self.main, width= 450, height=700, background="#3c4043")
               self.calculatorFrame.pack(side = RIGHT, fill=Y)
@@ -101,6 +110,7 @@ class App(Frame):
 
               # call dimwidgets to add all widgets to their subframe
 
+
               self.dimwidgets()
 
 
@@ -110,28 +120,34 @@ class App(Frame):
               '''plot_entry holds the equation for the graph
               plot_entry is disabled so that you can only input when to press the calculator buttons'''
 
+
               self.plot_entry = Entry(self.calculatorFrame , bg= "#3C4043", width=17, borderwidth= 6, font= "Arial 30", state= DISABLED)
               self.plot_entry.place(x = 6, y = 11)
 
 
-              '''Buttons below when clicked insert a value to the entry using the entry_stack class'''
+              # Buttons below when clicked insert a value to the entry using the entry_stack class
+
 
               Button(self.calculatorFrame , text="sin", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("sin"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 70)
 
+
               Button(self.calculatorFrame , text="cos", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("cos"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 109)
               
+
               Button(self.calculatorFrame , text="tan", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("tan"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 148)
               
+
               Button(self.calculatorFrame , text="x", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("x"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 187)
               
+
               Button(self.calculatorFrame , text="y", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("y"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 226)
@@ -142,18 +158,22 @@ class App(Frame):
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("^"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 70)
 
+
               Button(self.calculatorFrame , text="!", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("fact"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 109)
               
+
               Button(self.calculatorFrame , text="log", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("log"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 148)
               
+
               Button(self.calculatorFrame , text="e", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("e"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 187)
               
+
               Button(self.calculatorFrame , text="π", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("pi"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 226)
@@ -164,17 +184,21 @@ class App(Frame):
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("("), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 70)
               
+
               Button(self.calculatorFrame , text="1", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("1"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 109)
               
+
               Button(self.calculatorFrame , text="4", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("4"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 148)
 
+
               Button(self.calculatorFrame , text="7", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("7"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 187)
+
 
               Button(self.calculatorFrame , text="0", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("0"), self.plot_entry.config(state = DISABLED)]
@@ -186,18 +210,22 @@ class App(Frame):
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push(")"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 70)
 
+
               Button(self.calculatorFrame , text="2", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("2"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 109)
               
+
               Button(self.calculatorFrame , text="5", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("5"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 148)
+
 
               Button(self.calculatorFrame , text="8", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("8"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 187)
               
+
               Button(self.calculatorFrame , text=".", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("."), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 226)
@@ -205,17 +233,22 @@ class App(Frame):
 
               # button below deletes the end string if there is one
 
+
               Button(self.calculatorFrame , text="Delete", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL), entry_stack.pop(), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 70)
         
+
+
               Button(self.calculatorFrame , text="3", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("3"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 109)
 
+
               Button(self.calculatorFrame , text="6", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("6"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 148)
+
 
               Button(self.calculatorFrame , text="9", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("9"), self.plot_entry.config(state = DISABLED)]
@@ -232,22 +265,27 @@ class App(Frame):
 
               # button below clears plot_entry
 
+
               Button(self.calculatorFrame , text="Clear", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL), entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 70)
               
+
               Button(self.calculatorFrame , text="÷", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("/"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 109)
               
+
               Button(self.calculatorFrame , text="*", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("*"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 148)
               
+
               Button(self.calculatorFrame , text="-", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("-"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 187)
               
+
               Button(self.calculatorFrame , text="+", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
                lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("+"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 226)
@@ -255,6 +293,7 @@ class App(Frame):
               
               '''button below allows the user to edit a graph that is selected in the Tkinter Listbox
               button calls staticmethod edit_graph from the class Graph_tools'''
+
 
               Button(self.calculatorFrame , text="edit", width = 15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
                lambda:Graph_tools.edit_graph()
@@ -264,19 +303,23 @@ class App(Frame):
               # button below allows the user to delete a graph that is selected in the Tkinter Listbox
               # button calls staticmethod delete_graph from the class Graph_tools
 
+
               Button(self.calculatorFrame , text="delete",width = 15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
                lambda:Graph_tools.delete_graph()
                ).place(x=203, y=461)
               
 
+              # below is a Tkinter slider which represents the theta value of when we want to rotate a graph
+
+
               self.slider = Scale(self.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
                lambda x :dim2_rotation_matrix())
-              
               self.slider.place(x=10,y=10)
 
 
               '''added Tkinter Scrollbar to scroll on the Listbox if needed
               Tkinter Scrollbar is attacted to the entire right side of the Listbox'''
+
 
               self.scrollbar = Scrollbar(self.calculatorFrame2 , width = 20)
               self.scrollbar.pack( side = RIGHT, fill=Y )
@@ -284,8 +327,8 @@ class App(Frame):
 
               '''create Tkinter Listbox in calculatorFrame2 subframe
               allow the scrollbar to scroll the listbox if needed
-              config Listbox command after Listbox is created because command calls itself 
-              '''
+              config Listbox command after Listbox is created because command calls itself'''
+
 
               self.mylist = Listbox(self.calculatorFrame2 , yscrollcommand= self.scrollbar.set, width= 50, font = "Arial 10", borderwidth= 6)
               self.mylist.pack(side = LEFT, fill = BOTH )
@@ -294,10 +337,12 @@ class App(Frame):
 
               # create matplotlib Figure
 
+
               self.fig = Figure(figsize = (8, 5), dpi = 100)
 
 
               # create matplotlib button to call class Index which changes dimention of graph
+
 
               self.dim_indx = self.fig.add_axes([0.9, 0.9, 0.09, 0.075])
               self.dim_indx_btn = Btn(self.dim_indx, "2D")
@@ -306,10 +351,12 @@ class App(Frame):
 
               # create the subplot for which we are graphing
 
+
               self.ax = self.fig.add_subplot(111)
 
 
               # axvline and axhline creates lines which cross x = 0 and y = 0
+
 
               self.ax.axvline(color="black", linestyle="--")
               self.ax.axhline(color="black", linestyle="--")
@@ -317,11 +364,13 @@ class App(Frame):
 
               # set x and y axis limit to -10 and 10
 
+
               self.ax.set_xlim(-10, 10)
               self.ax.set_ylim(-10, 10)
 
 
               # label x and y axis
+
 
               self.ax.set_ylabel("Y")
               self.ax.set_xlabel("X")
@@ -329,19 +378,21 @@ class App(Frame):
 
               # create grid on graph
 
-              self.ax.grid()
 
+              self.ax.grid()
 
 
               # backend the matplotlib figure to the tkinter subframe
               # draw graph
                
+
               self.fig_canvas = FigureCanvasTkAgg(self.fig, master = self.plotFrame)
               self.fig_canvas.draw()
               self.fig_canvas.get_tk_widget().pack()
 
 
               # add built-in matplotlib toolbar
+
 
               toolbar = NavigationToolbar2Tk(self.fig_canvas, self.plotFrame, pack_toolbar = False)
               toolbar.update()
@@ -354,10 +405,12 @@ class App(Frame):
 
 # class Graph_tools does all the graphing calculations and editing graphs
 
+
 class Graph_tools(App):
 
 
        # staticmetod plot_graph runs calculations to plot the equations given
+
 
        @staticmethod
        def plot_graph(fx):
@@ -366,27 +419,30 @@ class Graph_tools(App):
               # if statements see if the graph is 2D or 3D
               # graph is 2D
 
+
               if str(app.dim_indx_btn.label)[16:18] == "2D":
 
 
                      # the method will try and do the calculations
                      # if it fails it does not plot anything
 
+
                      try:
 
+
                             """How 2D plotting works:
-                               ----------------------------------------------
+                            -----------------------------------------------------------------------------
                                we get a list with 2000 elements between -50 and 50
                                this is used as our x values
 
-                               list comprehension is used to iterate through x
+                               list comprehension is used to iterate through our x values
                                eval(fx) will use the string in fx as an expression 
                                this means the iterated value of x will be substituted into the expression
                                after this is calculated it appends the number into the new list
+                            -----------------------------------------------------------------------------
                             """
                             
 
-                            
                             x = range_x(-50, 50, 2000)
 
 
@@ -421,8 +477,9 @@ class Graph_tools(App):
 
                      try:
 
+
                             """How 3d plotting works:
-                            -----------------------------------------------------------------------------------------------
+                     ------------------------------------------------------------------------------------------------------
                             First we get a list with 100 elements between -10,10 (100 has been chosen to maintain lag).
                             Next we use this list to make a matrix (X) which has the size: length of list x length of list
                             we use matrix X as the x values of our graph.
@@ -432,9 +489,9 @@ class Graph_tools(App):
 
                             For example:
 
-                            X = [1,2,3]    Y = [3,3,3]
+                            X = [1,2,3]    Y = [1,1,1]
                                 [1,2,3]        [2,2,2]
-                                [1,2,3]        [1,1,1]
+                                [1,2,3]        [3,3,3]
 
                             Finally we can get our z values by subbing in X and Y into the equation given.
                             To do this we need to iterate through the matricies and adding the values into a new matrix (Z).
@@ -447,18 +504,22 @@ class Graph_tools(App):
 
                             Once we have the matricies X,Y,Z we can now plot our graph
                             which uses the matplotlib plot_surface function
-                            -----------------------------------------------------------------------------------------------
-                            """
+                     ------------------------------------------------------------------------------------------------------
+                      """
 
 
-                            
                             x = range_x(-10, 10, 100)
+
 
                             X = ([x for i in x])
 
+
                             Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
 
+
                             Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
+
 
                             graph = app.ax.plot_surface(X,Y,Z, color = "r")
                             app.fig_canvas.draw()
