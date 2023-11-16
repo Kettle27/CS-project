@@ -1,5 +1,5 @@
-'''Computer Science Project 
-Author - George Sil'''
+# Computer Science Project 
+# Author - George Sil
 
 
 # Add all needed Libraries
@@ -11,7 +11,6 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 import numpy as np
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
-from math import *
 
 
 # Add my other files
@@ -39,9 +38,9 @@ backend_bases.NavigationToolbar2.toolitems = (
 class App(Frame):
        
        
-       """create class attribute list called plotlist
-       plotlist is going to hold information about all current plots
-       going to implement this to be in a database"""
+       # Create class attribute list called plotlist
+       # plotlist is going to hold information about all current plots
+       # going to implement this to be in a database
 
 
        plotlist = []
@@ -117,8 +116,8 @@ class App(Frame):
        def dimwidgets(self):
 
 
-              '''plot_entry holds the equation for the graph
-              plot_entry is disabled so that you can only input when to press the calculator buttons'''
+              # plot_entry holds the equation for the graph
+              # plot_entry is disabled so that you can only input when to press the calculator buttons
 
 
               self.plot_entry = Entry(self.calculatorFrame , bg= "#3C4043", width=17, borderwidth= 6, font= "Arial 30", state= DISABLED)
@@ -291,8 +290,8 @@ class App(Frame):
                ).place(x=330, y = 226)
               
               
-              '''button below allows the user to edit a graph that is selected in the Tkinter Listbox
-              button calls staticmethod edit_graph from the class Graph_tools'''
+              # button below allows the user to edit a graph that is selected in the Tkinter Listbox
+              # button calls staticmethod edit_graph from the class Graph_tools
 
 
               Button(self.calculatorFrame , text="edit", width = 15, font = "Arial 16", bg = "#5f6368", fg = "#e8eaed", borderwidth= 3, command=
@@ -317,17 +316,17 @@ class App(Frame):
               self.slider.place(x=10,y=10)
 
 
-              '''added Tkinter Scrollbar to scroll on the Listbox if needed
-              Tkinter Scrollbar is attacted to the entire right side of the Listbox'''
+              # added Tkinter Scrollbar to scroll on the Listbox if needed
+              # Tkinter Scrollbar is attacted to the entire right side of the Listbox
 
 
               self.scrollbar = Scrollbar(self.calculatorFrame2 , width = 20)
               self.scrollbar.pack( side = RIGHT, fill=Y )
 
 
-              '''create Tkinter Listbox in calculatorFrame2 subframe
-              allow the scrollbar to scroll the listbox if needed
-              config Listbox command after Listbox is created because command calls itself'''
+              # create Tkinter Listbox in calculatorFrame2 subframe
+              # allow the scrollbar to scroll the listbox if needed
+              # config Listbox command after Listbox is created because command calls itself
 
 
               self.mylist = Listbox(self.calculatorFrame2 , yscrollcommand= self.scrollbar.set, width= 50, font = "Arial 10", borderwidth= 6)
@@ -431,15 +430,15 @@ class Graph_tools(App):
 
 
                             """How 2D plotting works:
-                            -----------------------------------------------------------------------------
-                               we get a list with 2000 elements between -50 and 50
-                               this is used as our x values
+                     ---------------------------------------------------------------------------------
+                            we get a list with 2000 elements between -50 and 50
+                            this is used as our x values
 
-                               list comprehension is used to iterate through our x values
-                               eval(fx) will use the string in fx as an expression 
-                               this means the iterated value of x will be substituted into the expression
-                               after this is calculated it appends the number into the new list
-                            -----------------------------------------------------------------------------
+                            list comprehension is used to iterate through our x values
+                            eval(fx) will use the string in fx as an expression 
+                            this means the iterated value of x will be substituted into the expression
+                            after this is calculated it appends the number into the new list
+                     ---------------------------------------------------------------------------------
                             """
                             
 
@@ -524,32 +523,66 @@ class Graph_tools(App):
                             graph = app.ax.plot_surface(X,Y,Z, color = "r")
                             app.fig_canvas.draw()
 
+
                             app.plotlist.append([fx , graph])
 
+
                             app.mylist.insert(END, f" z = {fx}")
+
+
                      except:
+
+
                             pass
 
 
        @staticmethod             
        def delete_graph():
+
+
+              # get elements from mylist that are selected in the Listbox
+
+
               is_selected = app.mylist.curselection()
+
+
+              # if something is selected
+
+
               if is_selected:
+
+
+                     # if using 2D plane 
+
+
                      if str(app.dim_indx_btn.label)[16:18] == "2D":
 
+
+                            # remove the graph and remove the data from the list
+                            
                             get_info = app.plotlist[is_selected[0]]
                             app.plotlist.remove(get_info)
                             line = get_info[1].pop()
                             line.remove()
 
+
                             app.fig_canvas.draw()
                             app.mylist.delete(is_selected[0])
 
+
+                     # if using 3D plane 
+
+
                      if str(app.dim_indx_btn.label)[16:18] == "3D":
+
+
+                            # remove the graph and remove the data from the list
+
 
                             get_info = app.plotlist[is_selected[0]]
                             app.plotlist.remove(get_info)
                             get_info[1].remove()
+
 
                             app.fig_canvas.draw()
                             app.mylist.delete(is_selected[0])
@@ -557,9 +590,29 @@ class Graph_tools(App):
 
        @staticmethod
        def edit_graph():
+
+
+              # get elements from mylist that are selected in the Listbox
+
+
               is_selected = app.mylist.curselection()
+
+
+              # if something is selected
+
+
               if is_selected:
+
+
+                     # if using 2D plane 
+
+
                      if str(app.dim_indx_btn.label)[16:18] == "2D":
+
+
+                            # remove graph and data
+                            # push function back into the entry_stack
+
                      
                             get_info = app.plotlist[is_selected[0]]
                             app.plotlist.remove(get_info)
@@ -571,7 +624,16 @@ class Graph_tools(App):
                             entry_stack.strip_push(get_info[0])
                             app.plot_entry.config(state=DISABLED)
 
+                     
+                     # if using 3D plane 
+
+
                      if str(app.dim_indx_btn.label)[16:18] == "3D":
+
+
+                            # remove graph and data
+                            # push function back into the entry_stack
+
                      
                             get_info = app.plotlist[is_selected[0]]
                             app.plotlist.remove(get_info)
@@ -583,21 +645,49 @@ class Graph_tools(App):
                             app.plot_entry.config(state=DISABLED)
         
 
+
+# Index class switches between the 3D and 2D plane
+
+
 class Index(App):
 
 
        def __init__(self):
+            
+
+            # if using 2D plane 
+
 
             if str(app.dim_indx_btn.label)[16:18] == "2D":
-                self.dim3()
+                  
+              
+                  # switch to 3D plane
+                  
+                  
+                  self.dim3()
+
+
+            # if using 3D plane 
+
 
             elif str(app.dim_indx_btn.label)[16:18] == "3D":
-                self.dim2()
+                  
+
+                  # switch to 3D plane
+                  
+
+                  self.dim2()
 
 
        def dim2(self):
+            
+
+            # remove the axes and delete all data 
+            # create a new 2D axes
+            
 
             app.fig.delaxes(app.fig.axes[1])
+
 
             app.ax = app.fig.add_subplot(111)
             app.ax.axvline(color="black", linestyle="--")
@@ -608,23 +698,34 @@ class Index(App):
             app.ax.set_xlabel("X")
             app.ax.grid()
 
+
             app.dim_indx_btn.label.set_text("2D")
             app.plotlist = []
             app.mylist.delete(0, END)
             app.fig_canvas.draw()
 
+
             app.x_slider.destroy()
             app.y_slider.destroy()
             app.z_slider.destroy()
 
+
             app.slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
              lambda x :dim2_rotation_matrix.rotate_x())
               
+
             app.slider.place(x=10,y=10)
        
 
        def dim3(self):
+            
+
+            # remove the axes and delete all data 
+            # create a new 2D axes
+            
+
             app.fig.delaxes(app.fig.axes[1])
+
 
             app.ax = app.fig.add_subplot(111, projection="3d")
             app.ax.set_xlim(-10, 10)
@@ -638,24 +739,31 @@ class Index(App):
             app.plotlist = []
             app.mylist.delete(0, END)
 
+
             app.fig_canvas.draw()
 
+
             app.slider.destroy()
+
 
             app.x_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
              lambda x :dim3_rotation_matrix.rotate_x())
               
+
             app.x_slider.place(x=10,y=10)
+
 
             app.y_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
              lambda x :dim3_rotation_matrix.rotate_y())
               
+
             app.y_slider.place(x=220,y=10)
 
 
             app.z_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
              lambda x :dim3_rotation_matrix.rotate_z())
               
+
             app.z_slider.place(x=430,y=10)
 
 
@@ -682,12 +790,14 @@ class entry_stack:
 
     def __len__(self):
 
+
         return len(self.stack)
 
 
     @staticmethod
     def push(val):
         
+
         entry_stack.stack.append(entry_stack.dic[val])
         app.plot_entry.insert(END, entry_stack.dic[val])
 
@@ -695,16 +805,20 @@ class entry_stack:
     @staticmethod
     def pop():
 
+
         if len(entry_stack.stack) > 0:
             
+
             app.plot_entry.delete(app.plot_entry.index("end") - len(entry_stack.stack[-1]), END)
             entry_stack.stack.pop(-1)
 
     @staticmethod
     def pull():
         
+
         if len(entry_stack.stack) > 0:
             
+
             app.plot_entry.delete(0, END)
             entry_stack.stack.clear()
 
@@ -712,15 +826,21 @@ class entry_stack:
     @staticmethod
     def strip_push(val):
           
+
           string = ""
 
+
           for char in val:
+                
+
                 string += char
 
+
                 if string in entry_stack.dic:
+                      
+
                       entry_stack.push(string)
                       string = ""
-
 
 
 
@@ -730,20 +850,26 @@ class dim2_rotation_matrix:
 
     def __init__(self):
  
+
        is_selected = app.mylist.curselection()
+
        if is_selected:
+
 
               get_info = app.plotlist[is_selected[0]]
 
+
               X = range_x(-50, 50, 2000)
 
+
               Y = [eval(get_info[0]) for x in X]
+
 
               θ = (app.slider.get() * (pi/180))
 
 
-              self.rot_x = [x*cos(θ) - y*sin(θ) for x, y in zip(X, Y)]
-              self.rot_y = [x*sin(θ) + y*cos(θ) for x, y in zip(X, Y)]
+              self.rot_x = [x*math.cos(θ) - y*math.sin(θ) for x, y in zip(X, Y)]
+              self.rot_y = [x*math.sin(θ) + y*math.cos(θ) for x, y in zip(X, Y)]
 
 
               app.plotlist.remove(get_info)
@@ -753,6 +879,7 @@ class dim2_rotation_matrix:
               
               graph = app.ax.plot(self.rot_x, self.rot_y, color = "r")
 
+
               app.fig_canvas.draw()
 
 
@@ -760,31 +887,42 @@ class dim2_rotation_matrix:
 
 
 
+
 class dim3_rotation_matrix:
       
+
       @staticmethod
       def rotate_z():
               
+
               is_selected = app.mylist.curselection()
+
 
               if is_selected:
 
+
                      get_info = app.plotlist[is_selected[0]]
+
 
                      x = range_x(-10, 10, 10)
 
+
                      X = ([x for i in x])
+
 
                      Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
 
+
                      Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
 
                      θ = app.z_slider.get() * (pi/180)
 
 
-                     rot_x = [[x*cos(θ) - y*sin(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
-                     rot_y = [[x*sin(θ) + y*cos(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
+                     rot_x = [[x*math.cos(θ) - y*math.sin(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
+                     rot_y = [[x*math.sin(θ) + y*math.cos(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
                      rot_z = Z
+
 
                      app.plotlist.remove(get_info)
                      get_info[1].remove()
@@ -794,6 +932,7 @@ class dim3_rotation_matrix:
 
 
                      app.fig_canvas.draw()
+
 
                      app.plotlist.append([get_info[0] , graph])
 
@@ -801,26 +940,35 @@ class dim3_rotation_matrix:
       @staticmethod
       def rotate_y():
               
+
               is_selected = app.mylist.curselection()
+
 
               if is_selected:
 
+
                      get_info = app.plotlist[is_selected[0]]
+
 
                      x = range_x(-10, 10, 10)
 
+
                      X = ([x for i in x])
+
 
                      Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
 
+
                      Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
 
                      θ = app.y_slider.get() * (pi/180)
 
 
-                     rot_x = [[x*cos(θ) + z*sin(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))]
+                     rot_x = [[x*math.cos(θ) + z*math.sin(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))]
                      rot_y = Y
-                     rot_z = np.array([[-x*sin(θ) + z*cos(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))])
+                     rot_z = np.array([[-x*math.sin(θ) + z*math.cos(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))])
+
 
                      app.plotlist.remove(get_info)
                      get_info[1].remove()
@@ -830,6 +978,7 @@ class dim3_rotation_matrix:
 
 
                      app.fig_canvas.draw()
+
 
                      app.plotlist.append([get_info[0] , graph])
 
@@ -838,26 +987,35 @@ class dim3_rotation_matrix:
       @staticmethod
       def rotate_x():
               
+              
               is_selected = app.mylist.curselection()
+
 
               if is_selected:
 
+
                      get_info = app.plotlist[is_selected[0]]
+
 
                      x = range_x(-10, 10, 10)
 
+
                      X = ([x for i in x])
+
 
                      Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
 
+
                      Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
 
                      θ = app.x_slider.get() * (pi/180)
 
 
                      rot_x = X
-                     rot_y = [[y*cos(θ) - z*sin(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))]
-                     rot_z = np.array([[y*sin(θ) + z*cos(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))])
+                     rot_y = [[y*math.cos(θ) - z*math.sin(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))]
+                     rot_z = np.array([[y*math.sin(θ) + z*math.cos(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))])
+
 
                      app.plotlist.remove(get_info)
                      get_info[1].remove()
@@ -868,13 +1026,15 @@ class dim3_rotation_matrix:
 
                      app.fig_canvas.draw()
 
+
                      app.plotlist.append([get_info[0] , graph])
 
 
 
 
-
 if __name__ == "__main__":
+    
+
     root = Tk()
     app = App(root)
     root.mainloop()
