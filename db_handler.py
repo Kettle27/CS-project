@@ -1,6 +1,7 @@
 import sqlite3
 import re
 from tkinter import *
+from extension import *
 
 
 class Login:
@@ -50,7 +51,7 @@ class Login:
         cursor.execute(statement)
 
 
-        if cursor.fetchall() == []:
+        if cursor.fetchone() == []:
 
 
             statement = f"""INSERT INTO Logins (Username, Password)
@@ -75,32 +76,45 @@ class User_info:
     @staticmethod
     def Load_func():
         
-        pass
+        conn = sqlite3.connect("Calculator.db")
+        cursor = conn.cursor()
+
+        statement1 = f"""SELECT function FROM Graphs
+                        WHERE Username = "{"test1"}" """
+        
+        cursor.execute(statement1)
+
+        data = cursor.fetchall()
+        print(data)
 
 
     @staticmethod
-    def Add_func(function, x, y):
+    def Add_func(object, function, x, y):
 
         conn = sqlite3.connect("Calculator.db")
         cursor = conn.cursor()
 
 
-        statement = f"""INSERT INTO Graphs (Username, function)
-                    VALUES ("{user}","{function}");"""
+        statement1 = f"""INSERT INTO Graphs (Username, function, object)
+                        SELECT * FROM(VALUES ("{user}","{function}","{object}"))
+                        WHERE NOT EXISTS (SELECT * FROM Graphs
+                                          WHERE Username = "{user}"
+                                          AND function = "{function}")"""
         
 
-        cursor.execute(statement)
+        cursor.execute(statement1)
         conn.commit()
 
-        for i in range(2001):
+
+        statement2 = f"""INSERT INTO GraphInfo (function, x_val, y_val)
+                            SELECT * FROM(VALUES ("{function}","{x}","{y}"))
+                            WHERE NOT EXISTS (SELECT * FROM GraphInfo
+                                              WHERE function = "{function}"
+                                              AND x_val = "{x}")"""
 
 
-            statement = f"""INSERT INTO GraphInfo (function, x_val, y_val)
-                        VALUES ("{function}","{x[i]}","{y[i]}");"""
-
-
-            cursor.execute(statement)
-            conn.commit()
+        cursor.execute(statement2)
+        conn.commit()
         
         conn.close()
     
@@ -108,4 +122,20 @@ class User_info:
     @staticmethod
     def Del_func(function):
 
-        pass
+        conn = sqlite3.connect("Calculator.db")
+        cursor = conn.cursor()       
+
+        statement1 = f"""DELETE FROM Graphs
+                         WHERE Username = "{user}"
+                         AND function = "{function}" """
+
+
+        cursor.execute(statement1)
+
+        conn.commit()
+
+
+        conn.close()
+    
+
+User_info.Load_func()
