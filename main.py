@@ -2,6 +2,7 @@
 # Author - George Sil
 
 
+
 # Add all needed Libraries
 
 
@@ -17,7 +18,8 @@ from matplotlib.widgets import Button as Btn
 
 
 from extension import *
-# import validation
+import validation
+from db_handler import *
 
 
 # Configure which matplotlib tools to use
@@ -457,11 +459,10 @@ class Graph_tools(App):
                             # then add the equation used and the graph (value for graph is an address)
 
                             app.plotlist.append([fx , graph])
-
-
-                            # insert the equation used into the Listbox in the main program as an f string
-
                             app.mylist.insert(END, f" y = {fx}")
+                            User_info.Add_func(fx, x, y)
+
+
                      except:
                             pass
 
@@ -567,7 +568,12 @@ class Graph_tools(App):
 
 
                             app.fig_canvas.draw()
+
+                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:])
+
                             app.mylist.delete(is_selected[0])
+
+
 
 
                      # if using 3D plane 
