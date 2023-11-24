@@ -113,6 +113,16 @@ class App(Frame):
 
 
               self.dimwidgets()
+              for x, y, fx in User_info.Load_func():
+
+                     graph = self.ax.plot(x, y, color = "r")
+                     self.fig_canvas.draw()
+
+
+                     self.plotlist.append([fx , graph])
+                     self.mylist.insert(END, f" y = {fx}")
+
+                     
 
 
        def dimwidgets(self):
@@ -460,7 +470,8 @@ class Graph_tools(App):
 
                             app.plotlist.append([fx , graph])
                             app.mylist.insert(END, f" y = {fx}")
-                            User_info.Add_func(fx, x, y)
+
+                            User_info.Add_func(graph, fx, x, y)
 
 
                      except:
