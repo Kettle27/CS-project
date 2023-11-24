@@ -79,13 +79,19 @@ class User_info:
         conn = sqlite3.connect("Calculator.db")
         cursor = conn.cursor()
 
-        statement1 = f"""SELECT function FROM Graphs
-                        WHERE Username = "{"test1"}" """
+        statement1 = f"""SELECT x_val, y_val, function FROM GraphInfo
+                        WHERE EXISTS (SELECT Username FROM Graphs
+                                      WHERE Username = "{user}"
+                                      AND Graphs.function = GraphInfo.function) """
         
         cursor.execute(statement1)
 
         data = cursor.fetchall()
-        print(data)
+
+
+        return User_info.Read_data(data)
+
+        conn.close()
 
 
     @staticmethod
@@ -138,4 +144,10 @@ class User_info:
         conn.close()
     
 
-User_info.Load_func()
+    @staticmethod
+    def Read_data(function):
+
+        for i in function:
+
+            yield [eval(i[0]),eval(i[1]), i[2]]
+
