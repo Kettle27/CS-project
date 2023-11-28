@@ -79,30 +79,44 @@ class User_info:
         conn = sqlite3.connect("Calculator.db")
         cursor = conn.cursor()
 
-        statement1 = f"""SELECT x_val, y_val, function FROM GraphInfo
+        statement1 = f"""SELECT function FROM GraphInfo
                         WHERE EXISTS (SELECT Username FROM Graphs
                                       WHERE Username = "{user}"
                                       AND Graphs.function = GraphInfo.function) """
         
+
         cursor.execute(statement1)
 
         data = cursor.fetchall()
 
+        for i in data:
 
-        return User_info.Read_data(data)
+            statement2 = f"""DELETE FROM Graphs
+                         WHERE Username = "{user}"
+                         AND function = "{i[0]}" """
+            
+            conn.execute(statement2)
+
+            conn.commit()
+        
 
         conn.close()
 
+        for i in data:
+
+            yield i[0]
+
+
 
     @staticmethod
-    def Add_func(object, function, x, y):
+    def Add_func(objectID, function, x, y):
 
         conn = sqlite3.connect("Calculator.db")
         cursor = conn.cursor()
 
 
         statement1 = f"""INSERT INTO Graphs (Username, function, object)
-                        SELECT * FROM(VALUES ("{user}","{function}","{object}"))
+                        SELECT * FROM(VALUES ("{user}","{function}","{objectID}"))
                         WHERE NOT EXISTS (SELECT * FROM Graphs
                                           WHERE Username = "{user}"
                                           AND function = "{function}")"""
@@ -136,18 +150,35 @@ class User_info:
                          AND function = "{function}" """
 
 
+        statement2 = f"""SELECT object FROM Graphs
+                         WHERE Username = "{user}"
+                         AND function = "{function}" """
+        
+
+        cursor.execute(statement2)
+
+        data = cursor.fetchall()
+
+
         cursor.execute(statement1)
 
         conn.commit()
 
-
         conn.close()
-    
 
-    @staticmethod
-    def Read_data(function):
+        if data == []:
 
-        for i in function:
+            return None
+        
+        else:
 
-            yield [eval(i[0]),eval(i[1]), i[2]]
+            return data[0][0]
+        
 
+
+
+user = "test1"
+
+for fx in User_info.Load_func():
+
+    print(fx)
