@@ -12,6 +12,7 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 import numpy as np
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
+import ctypes
 
 
 # Add my other files
@@ -113,15 +114,8 @@ class App(Frame):
 
 
               self.dimwidgets()
-              for x, y, fx in User_info.Load_func():
 
-                     graph = self.ax.plot(x, y, color = "r")
-                     self.fig_canvas.draw()
-
-
-                     self.plotlist.append([fx , graph])
-                     self.mylist.insert(END, f" y = {fx}")
-
+                     
                      
 
 
@@ -411,6 +405,11 @@ class App(Frame):
               self.fig_canvas.get_tk_widget().pack()
 
 
+              for fx in User_info.Load_func():
+                     
+                     Graph_tools.plot_graph(fx)
+
+
 
        
 
@@ -463,6 +462,8 @@ class Graph_tools(App):
                             # then plot the values of x and y into matplotlib
 
                             graph = app.ax.plot(x, y, color = "r")
+                            
+
                             app.fig_canvas.draw()
 
 
@@ -471,7 +472,7 @@ class Graph_tools(App):
                             app.plotlist.append([fx , graph])
                             app.mylist.insert(END, f" y = {fx}")
 
-                            User_info.Add_func(graph, fx, x, y)
+                            User_info.Add_func(id(graph), fx, x, y)
 
 
                      except:
@@ -570,17 +571,19 @@ class Graph_tools(App):
                      if str(app.dim_indx_btn.label)[16:18] == "2D":
 
 
-                            # remove the graph and remove the data from the list
-                            
-                            get_info = app.plotlist[is_selected[0]]
-                            app.plotlist.remove(get_info)
-                            line = get_info[1].pop()
-                            line.remove()
+                            objID = User_info.Del_func((app.mylist.get(is_selected[0]))[5:])
 
+                            print()
+                            print(objID)
 
-                            app.fig_canvas.draw()
+                            obj = ctypes.cast(int(objID), ctypes.py_object).value
 
-                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:])
+                            print(obj)
+
+                            #line = obj.pop()
+                            #line.remove()
+
+                            #app.fig_canvas.draw()
 
                             app.mylist.delete(is_selected[0])
 
