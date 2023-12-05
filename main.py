@@ -41,14 +41,6 @@ backend_bases.NavigationToolbar2.toolitems = (
 class App(Frame):
        
        
-       # Create class attribute list called plotlist
-       # plotlist is going to hold information about all current plots
-       # going to implement this to be in a database
-
-
-       plotlist = []
-
-
        def __init__(self, master):
 
 
@@ -403,14 +395,8 @@ class App(Frame):
               toolbar.update()
               toolbar.pack(side = BOTTOM, fill = X)
               self.fig_canvas.get_tk_widget().pack()
-
-
-              for fx in User_info.Load_func():
                      
-                     Graph_tools.plot_graph(fx)
-
-
-
+                     
        
 
 # class Graph_tools does all the graphing calculations and editing graphs
@@ -462,17 +448,17 @@ class Graph_tools(App):
                             # then plot the values of x and y into matplotlib
 
                             graph = app.ax.plot(x, y, color = "r")
+                            ID = id(graph)
+
+                            dic.add(fx, graph)
                             
-
                             app.fig_canvas.draw()
-
 
                             # then add the equation used and the graph (value for graph is an address)
 
-                            app.plotlist.append([fx , graph])
                             app.mylist.insert(END, f" y = {fx}")
 
-                            User_info.Add_func(id(graph), fx, x, y)
+                            User_info.Add_func(ID, fx, x, y)
 
 
                      except:
@@ -570,20 +556,26 @@ class Graph_tools(App):
 
                      if str(app.dim_indx_btn.label)[16:18] == "2D":
 
+                            try:
 
-                            objID = User_info.Del_func((app.mylist.get(is_selected[0]))[5:])
+                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:])
 
-                            print()
-                            print(objID)
+                                   fx = (app.mylist.get(is_selected[0]))[5:]
 
-                            obj = ctypes.cast(int(objID), ctypes.py_object).value
+                                   obj = dic[fx]
+                                   dic.remove(fx)
 
-                            print(obj)
+                                   line = obj.pop()
+                                   line.remove()
+                            
+                            except:
+                                  
+                                  line = rot_list.pop()
+                                  line.remove()
+                                  
 
-                            #line = obj.pop()
-                            #line.remove()
 
-                            #app.fig_canvas.draw()
+                            app.fig_canvas.draw()
 
                             app.mylist.delete(is_selected[0])
 
@@ -800,7 +792,7 @@ class entry_stack:
            "tan" : "tan", "log" : "log",
            "e" : "e", "pi" : "pi",
            "x" : "x", "y" : "y",
-           "(" : "(", ")" : ")",
+           "(" : "(", ")" : ")", "0" : "0",
            "1" : "1", "2" : "2", "3" : "3",
            "4" : "4", "5" : "5", "6" : "6",
            "7" : "7", "8" : "8", "9" : "9",
@@ -869,20 +861,22 @@ class dim2_rotation_matrix:
 
 
     def __init__(self):
+
+       global rot_list
  
 
        is_selected = app.mylist.curselection()
 
+
        if is_selected:
 
-
-              get_info = app.plotlist[is_selected[0]]
+              fx = (app.mylist.get(is_selected[0]))[5:]
 
 
               X = range_x(-50, 50, 2000)
 
 
-              Y = [eval(get_info[0]) for x in X]
+              Y = [eval(fx) for x in X]
 
 
               θ = (app.slider.get() * (pi/180))
@@ -891,19 +885,35 @@ class dim2_rotation_matrix:
               self.rot_x = [x*math.cos(θ) - y*math.sin(θ) for x, y in zip(X, Y)]
               self.rot_y = [x*math.sin(θ) + y*math.cos(θ) for x, y in zip(X, Y)]
 
+              try:
+                     
+                     obj = dic[fx]
+                     dic.remove(fx)
 
-              app.plotlist.remove(get_info)
-              line = get_info[1].pop()
-              line.remove()
+                     line = obj.pop()
+                     line.remove()
+                     
+              except:
+                     try:
+
+                            line = rot_list.pop()
+                            line.remove()
+              
+                     except:
+                            pass
+              
+                          
+                    
               
               
               graph = app.ax.plot(self.rot_x, self.rot_y, color = "r")
-
+              rot_list = graph
 
               app.fig_canvas.draw()
 
 
-              app.plotlist.append([get_info[0] , graph])
+
+
 
 
 
@@ -1057,4 +1067,19 @@ if __name__ == "__main__":
 
     root = Tk()
     app = App(root)
+    dic = CustomDictionary()
+
+    for x, y, fx in User_info.Load_func():
+          
+       graph = app.ax.plot(x, y, color = "r")
+                            
+       app.fig_canvas.draw()
+
+       app.mylist.insert(END, f" y = {fx}")
+
+       User_info.Add_func(id(graph), fx, x, y)
+
+       dic.add(fx, graph)
+
+
     root.mainloop()
