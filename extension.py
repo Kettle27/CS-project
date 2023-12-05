@@ -1024,3 +1024,37 @@ class tan:
 
 
         return other ** self.tan
+    
+
+
+
+class CustomDictionary:
+
+
+    def __init__(self):
+
+
+        self.dic = {}
+
+    
+    def add(self, fx, val):
+
+
+        self.dic[fx] = val
+
+
+    def __getitem__(self, key):
+
+
+        return self.dic[key]
+
+    
+    def remove(self, fx):
+
+        self.dic.pop(fx)
+    
+
+    def __repr__(self):
+
+
+        return f"{self.dic}"
