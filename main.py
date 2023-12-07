@@ -449,7 +449,7 @@ class Graph_tools(App):
 
                             graph = app.ax.plot(x, y, color = "r")
 
-                            dic.add(fx, graph)
+                            dic2d.add(fx, graph)
                             
                             app.fig_canvas.draw()
 
@@ -525,7 +525,7 @@ class Graph_tools(App):
 
                             User_info.Add_func("3D", fx, X, Y, Z)
                             rot_list.append(0)
-                            dic.add(fx, graph)
+                            dic3d.add(fx, graph)
 
 
                             app.mylist.insert(END, f" z = {fx}")
@@ -560,12 +560,12 @@ class Graph_tools(App):
 
                             try:
 
-                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:])
+                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
 
                                    fx = (app.mylist.get(is_selected[0]))[5:]
 
-                                   obj = dic[fx]
-                                   dic.remove(fx)
+                                   obj = dic2d[fx]
+                                   dic2d.remove(fx)
 
                                    line = obj.pop()
                                    line.remove()
@@ -593,12 +593,29 @@ class Graph_tools(App):
                             # remove the graph and remove the data from the list
 
 
-                            get_info = app.plotlist[is_selected[0]]
-                            app.plotlist.remove(get_info)
-                            get_info[1].remove()
+                            try:
+                                   
+                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
+
+                                   fx = (app.mylist.get(is_selected[0]))[5:]
+
+
+                                   obj = dic3d[fx]
+                                   dic3d.remove(fx)
+
+                                   obj.remove()
+                            
+                            except:
+                                  
+                                  print("failed")
+                                  
+                                  #line = rot_list[is_selected[0]].pop()
+                                  #line.remove()
+                                  
 
 
                             app.fig_canvas.draw()
+
                             app.mylist.delete(is_selected[0])
     
 
@@ -627,16 +644,33 @@ class Graph_tools(App):
                             # remove graph and data
                             # push function back into the entry_stack
 
-                     
-                            get_info = app.plotlist[is_selected[0]]
-                            app.plotlist.remove(get_info)
-                            line = get_info[1].pop(0)
-                            line.remove()
+                            try:
+
+                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
+
+                                   fx = (app.mylist.get(is_selected[0]))[5:]
+
+                                   obj = dic2d[fx]
+                                   dic2d.remove(fx)
+
+                                   line = obj.pop()
+                                   line.remove()
+                            
+                            except:
+                                  
+                                  
+                                  line = rot_list[is_selected[0]].pop()
+                                  line.remove()
+                                  
+
                             app.fig_canvas.draw()
-                            app.mylist.delete(is_selected[0])
+
+              
                             app.plot_entry.config(state=NORMAL)
-                            entry_stack.strip_push(get_info[0])
+                            entry_stack.strip_push((app.mylist.get(is_selected[0]))[5:])
                             app.plot_entry.config(state=DISABLED)
+
+                            app.mylist.delete(is_selected[0])
 
                      
                      # if using 3D plane 
@@ -649,14 +683,34 @@ class Graph_tools(App):
                             # push function back into the entry_stack
 
                      
-                            get_info = app.plotlist[is_selected[0]]
-                            app.plotlist.remove(get_info)
-                            get_info[1].remove()
+                            try:
+
+                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
+
+                                   fx = (app.mylist.get(is_selected[0]))[5:]
+
+                                   obj = dic3d[fx]
+                                   dic3d.remove(fx)
+
+                                   obj.remove()
+                            
+                            except:
+                                  
+                                  pass
+                                  
+                                  #(rot_list[is_selected[0]]).remove()
+                                  #dic2d.remove(fx)
+                                  
+
                             app.fig_canvas.draw()
-                            app.mylist.delete(is_selected[0])
+
+              
                             app.plot_entry.config(state=NORMAL)
-                            entry_stack.strip_push(get_info[0])
+                            entry_stack.strip_push((app.mylist.get(is_selected[0]))[5:])
                             app.plot_entry.config(state=DISABLED)
+
+                            app.mylist.delete(is_selected[0])
+
         
 
 
@@ -714,8 +768,21 @@ class Index(App):
 
 
             app.dim_indx_btn.label.set_text("2D")
-            app.plotlist = []
+            rot_list = []
             app.mylist.delete(0, END)
+            
+            for x, y, fx in User_info.Load_func("2D"):
+          
+              graph = app.ax.plot(x, y, color = "r")
+                            
+
+              app.mylist.insert(END, f" y = {fx}")
+
+              User_info.Add_func("2D", fx, x, y)
+
+              dic2d.add(fx, graph)
+              rot_list.append(0)
+
             app.fig_canvas.draw()
 
 
@@ -725,10 +792,12 @@ class Index(App):
 
 
             app.slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
-             lambda x :dim2_rotation_matrix.rotate_x())
+             lambda x :dim2_rotation_matrix())
               
 
             app.slider.place(x=10,y=10)
+
+
        
 
        def dim3(self):
@@ -752,6 +821,22 @@ class Index(App):
             app.dim_indx_btn.label.set_text("3D")
             rot_list = []
             app.mylist.delete(0, END)
+
+
+            for x, y, z, fx in User_info.Load_func("3D"):
+              
+              z = np.array([[eval(fx) for x,y in zip(x[i],y[i])] for i in range(len(x))])
+          
+              graph = app.ax.plot_surface(x, y, z, color = "r")
+
+              app.fig_canvas.draw()
+
+              app.mylist.insert(END, f" y = {fx}")
+
+              User_info.Add_func("3D", fx, x, y, z)
+
+              dic3d.add(fx, graph)
+              rot_list.append(0)
 
 
             app.fig_canvas.draw()
@@ -780,18 +865,6 @@ class Index(App):
 
             app.z_slider.place(x=430,y=10)
 
-            for x, y, z, fx in User_info.Load_func("3D"):
-          
-              graph = app.ax.plot_surface(x, y, z, color = "r")
-                            
-              app.fig_canvas.draw()
-
-              app.mylist.insert(END, f" y = {fx}")
-
-              User_info.Add_func("3D", fx, x, y)
-
-              dic.add(fx, graph)
-              rot_list.append(0)
 
 
 
@@ -878,8 +951,6 @@ class dim2_rotation_matrix:
     def __init__(self):
 
 
- 
-
        is_selected = app.mylist.curselection()
 
 
@@ -902,14 +973,13 @@ class dim2_rotation_matrix:
 
               try:
                      
-                     obj = dic[fx]
-                     dic.remove(fx)
+                     obj = dic2d[fx]
+                     dic2d.remove(fx)
 
                      line = obj.pop()
                      line.remove()
                      
               except:
-
 
                      line = rot_list[is_selected[0]].pop()
                      line.remove()
@@ -940,7 +1010,7 @@ class dim3_rotation_matrix:
               if is_selected:
 
 
-                     get_info = app.plotlist[is_selected[0]]
+                     fx = (app.mylist.get(is_selected[0]))[5:]
 
 
                      x = range_x(-10, 10, 10)
@@ -952,7 +1022,7 @@ class dim3_rotation_matrix:
                      Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
 
 
-                     Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+                     Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
 
 
                      θ = app.z_slider.get() * (pi/180)
@@ -963,17 +1033,34 @@ class dim3_rotation_matrix:
                      rot_z = Z
 
 
-                     app.plotlist.remove(get_info)
-                     get_info[1].remove()
+                     try:
+                                   
+                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
+
+                            fx = (app.mylist.get(is_selected[0]))[5:]
+
+
+                            obj = dic3d[fx]
+                            dic3d.remove(fx)
+
+                            obj.remove()
+                            
+                     except:
+                                  
+                            print("failed")
+                                  
+                            #line = rot_list[is_selected[0]].pop()
+                            #line.remove()
 
 
                      graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
+                     rot_list[is_selected[0]] = graph
 
 
                      app.fig_canvas.draw()
 
 
-                     app.plotlist.append([get_info[0] , graph])
+
 
 
       @staticmethod
@@ -1076,7 +1163,8 @@ if __name__ == "__main__":
 
     root = Tk()
     app = App(root)
-    dic = CustomDictionary()
+    dic2d = CustomDictionary()
+    dic3d = CustomDictionary()
 
     global rot_list
     rot_list = []
@@ -1089,9 +1177,9 @@ if __name__ == "__main__":
 
        app.mylist.insert(END, f" y = {fx}")
 
-       User_info.Add_func(id(graph), fx, x, y)
+       User_info.Add_func("2D", fx, x, y)
 
-       dic.add(fx, graph)
+       dic2d.add(fx, graph)
        rot_list.append(0)
 
 
