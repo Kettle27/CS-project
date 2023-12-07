@@ -448,7 +448,6 @@ class Graph_tools(App):
                             # then plot the values of x and y into matplotlib
 
                             graph = app.ax.plot(x, y, color = "r")
-                            ID = id(graph)
 
                             dic.add(fx, graph)
                             
@@ -458,7 +457,8 @@ class Graph_tools(App):
 
                             app.mylist.insert(END, f" y = {fx}")
 
-                            User_info.Add_func(ID, fx, x, y)
+                            User_info.Add_func("2D", fx, x, y)
+                            rot_list.append(0)
 
 
                      except:
@@ -523,7 +523,9 @@ class Graph_tools(App):
                             app.fig_canvas.draw()
 
 
-                            app.plotlist.append([fx , graph])
+                            User_info.Add_func("3D", fx, X, Y, Z)
+                            rot_list.append(0)
+                            dic.add(fx, graph)
 
 
                             app.mylist.insert(END, f" z = {fx}")
@@ -570,7 +572,7 @@ class Graph_tools(App):
                             
                             except:
                                   
-                                  line = rot_list.pop()
+                                  line = rot_list[is_selected[0]].pop()
                                   line.remove()
                                   
 
@@ -748,7 +750,7 @@ class Index(App):
 
 
             app.dim_indx_btn.label.set_text("3D")
-            app.plotlist = []
+            rot_list = []
             app.mylist.delete(0, END)
 
 
@@ -777,6 +779,19 @@ class Index(App):
               
 
             app.z_slider.place(x=430,y=10)
+
+            for x, y, z, fx in User_info.Load_func("3D"):
+          
+              graph = app.ax.plot_surface(x, y, z, color = "r")
+                            
+              app.fig_canvas.draw()
+
+              app.mylist.insert(END, f" y = {fx}")
+
+              User_info.Add_func("3D", fx, x, y)
+
+              dic.add(fx, graph)
+              rot_list.append(0)
 
 
 
@@ -862,7 +877,7 @@ class dim2_rotation_matrix:
 
     def __init__(self):
 
-       global rot_list
+
  
 
        is_selected = app.mylist.curselection()
@@ -894,20 +909,14 @@ class dim2_rotation_matrix:
                      line.remove()
                      
               except:
-                     try:
 
-                            line = rot_list.pop()
-                            line.remove()
-              
-                     except:
-                            pass
-              
-                          
-                    
-              
+
+                     line = rot_list[is_selected[0]].pop()
+                     line.remove()
+
               
               graph = app.ax.plot(self.rot_x, self.rot_y, color = "r")
-              rot_list = graph
+              rot_list[is_selected[0]] = graph
 
               app.fig_canvas.draw()
 
@@ -1069,7 +1078,10 @@ if __name__ == "__main__":
     app = App(root)
     dic = CustomDictionary()
 
-    for x, y, fx in User_info.Load_func():
+    global rot_list
+    rot_list = []
+
+    for x, y, fx in User_info.Load_func("2D"):
           
        graph = app.ax.plot(x, y, color = "r")
                             
@@ -1080,6 +1092,7 @@ if __name__ == "__main__":
        User_info.Add_func(id(graph), fx, x, y)
 
        dic.add(fx, graph)
+       rot_list.append(0)
 
 
     root.mainloop()
