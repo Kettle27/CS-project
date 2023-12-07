@@ -3,16 +3,14 @@ import re
 from tkinter import *
 from extension import *
 
+conn = sqlite3.connect("Calculator.db")
+cursor = conn.cursor()  
 
 class Login:
 
 
     @staticmethod
     def check_login(Username, Password):
-
-
-        conn = sqlite3.connect("Calculator.db")
-        cursor = conn.cursor()
 
 
         statement = f"""SELECT * FROM Logins
@@ -40,9 +38,6 @@ class Login:
     def create_login(Username, Password):
 
 
-        conn = sqlite3.connect("Calculator.db")
-        cursor = conn.cursor()
-
 
         statement = f"""SELECT * FROM Logins
                     WHERE Username = "{Username}"; """
@@ -59,12 +54,10 @@ class Login:
             cursor.execute(statement)
             conn.commit()
 
-            conn.close()
 
 
         else:
                 
-            conn.close()
 
             return True
 
@@ -74,111 +67,136 @@ class User_info:
 
     
     @staticmethod
-    def Load_func():
+    def Load_func(dim):
         
-        conn = sqlite3.connect("Calculator.db")
-        cursor = conn.cursor()
+        if dim == "2D":
 
-        statement1 = f"""SELECT function FROM GraphInfo
-                        WHERE EXISTS (SELECT Username FROM Graphs
-                                      WHERE Username = "{user}"
-                                      AND Graphs.function = GraphInfo.function) """
+            statement1 = f"""SELECT x_val, y_val, function FROM GraphInfo
+                             WHERE EXISTS (SELECT Username FROM Graphs
+                                           WHERE Username = "{user}"
+                                           AND Graphs.function = GraphInfo.function
+                                           AND dim = "{dim}") """
         
 
-        cursor.execute(statement1)
+            cursor.execute(statement1)
 
-        data = cursor.fetchall()
+            data = cursor.fetchall()
 
-        for i in data:
+            for i in data:
 
-            statement2 = f"""DELETE FROM Graphs
+                statement2 = f"""DELETE FROM Graphs
                          WHERE Username = "{user}"
-                         AND function = "{i[0]}" """
+                         AND function = "{i[2]}" """
             
-            conn.execute(statement2)
+                conn.execute(statement2)
 
-            conn.commit()
-        
+                conn.commit()
+    
 
-        conn.close()
+            for i in data:
 
-        for i in data:
+                yield [eval(i[0]), eval(i[1]), i[2]]
 
-            yield i[0]
+
+        else:
+
+            statement2 = f"""SELECT x_val, y_val, z_val, function FROM GraphInfo
+                             WHERE EXISTS (SELECT Username FROM Graphs
+                                           WHERE Username = "{user}"
+                                           AND Graphs.function = GraphInfo.function
+                                           AND dim = "{dim}") """
+            
+
+            cursor.execute(statement2)
+
+            data = cursor.fetchall()
+
+            for i in data:
+
+                statement2 = f"""DELETE FROM Graphs
+                         WHERE Username = "{user}"
+                         AND function = "{i[3]}" """
+            
+                conn.execute(statement2)
+
+                conn.commit()
+    
+
+            for i in data:
+
+                yield [eval(i[0]), eval(i[1]), eval(i[2]), i[3]]
+
 
 
 
     @staticmethod
-    def Add_func(objectID, function, x, y):
+    def Add_func(dim, function, x, y, z = None):
 
-        conn = sqlite3.connect("Calculator.db")
-        cursor = conn.cursor()
-
-
-        statement1 = f"""INSERT INTO Graphs (Username, function, object)
-                        SELECT * FROM(VALUES ("{user}","{function}","{objectID}"))
-                        WHERE NOT EXISTS (SELECT * FROM Graphs
+        statement1 = f"""INSERT INTO Graphs (Username, function, dim)
+                         SELECT * FROM(VALUES ("{user}","{function}","{dim}"))
+                         WHERE NOT EXISTS (SELECT * FROM Graphs
                                           WHERE Username = "{user}"
-                                          AND function = "{function}")"""
+                                          AND function = "{function}"
+                                          AND dim = "{dim}")"""
         
 
         cursor.execute(statement1)
         conn.commit()
 
+        if dim == "2D":
 
-        statement2 = f"""INSERT INTO GraphInfo (function, x_val, y_val)
-                            SELECT * FROM(VALUES ("{function}","{x}","{y}"))
-                            WHERE NOT EXISTS (SELECT * FROM GraphInfo
+            statement2 = f"""INSERT INTO GraphInfo (function, x_val, y_val)
+                             SELECT * FROM(VALUES ("{function}","{x}","{y}"))
+                             WHERE NOT EXISTS (SELECT * FROM GraphInfo
                                               WHERE function = "{function}"
                                               AND x_val = "{x}")"""
 
 
-        cursor.execute(statement2)
-        conn.commit()
+            cursor.execute(statement2)
+            conn.commit()
+
+        else:
+
+            statement2 = f"""INSERT INTO GraphInfo (function, x_val, y_val, z_val)
+                             SELECT * FROM(VALUES ("{function}","{x}","{y}","{z}"))
+                             WHERE NOT EXISTS (SELECT * FROM GraphInfo
+                                              WHERE function = "{function}"
+                                              AND x_val = "{x}")"""
+
+
+            cursor.execute(statement2)
+            conn.commit()
+
+
         
-        conn.close()
     
 
     @staticmethod
     def Del_func(function):
-
-        conn = sqlite3.connect("Calculator.db")
-        cursor = conn.cursor()       
+    
 
         statement1 = f"""DELETE FROM Graphs
                          WHERE Username = "{user}"
                          AND function = "{function}" """
 
-
-        statement2 = f"""SELECT object FROM Graphs
-                         WHERE Username = "{user}"
-                         AND function = "{function}" """
         
-
-        cursor.execute(statement2)
-
-        data = cursor.fetchall()
-
 
         cursor.execute(statement1)
 
         conn.commit()
 
-        conn.close()
-
-        if data == []:
-
-            return None
         
-        else:
+    @staticmethod
+    def Get_func(function, dim):
 
-            return data[0][0]
+        statement1 = f"""SELECT x_val, y_val FROM GraphInfo
+                        WHERE EXISTS (SELECT Username FROM Graphs
+                                      WHERE Username = "{user}"
+                                      AND GraphInfo.function = "{function}")
+                                      AND dim = "{dim}" """
         
+        cursor.execute(statement1)
 
+        data = cursor.fetchall()[0]
 
-
-user = "test1"
-
-for fx in User_info.Load_func():
-
-    print(fx)
+        return eval(data[0]), eval(data[1])
