@@ -75,7 +75,8 @@ class User_info:
                              WHERE EXISTS (SELECT Username FROM Graphs
                                            WHERE Username = "{user}"
                                            AND Graphs.function = GraphInfo.function
-                                           AND dim = "{dim}") """
+                                           AND dim = "{dim}"
+                                           AND z_val IS NULL) """
         
 
             cursor.execute(statement1)
@@ -104,12 +105,14 @@ class User_info:
                              WHERE EXISTS (SELECT Username FROM Graphs
                                            WHERE Username = "{user}"
                                            AND Graphs.function = GraphInfo.function
-                                           AND dim = "{dim}") """
+                                           AND dim = "{dim}")
+                                           AND z_val IS NOT NULL """
             
 
             cursor.execute(statement2)
 
             data = cursor.fetchall()
+
 
             for i in data:
 
@@ -120,11 +123,11 @@ class User_info:
                 conn.execute(statement2)
 
                 conn.commit()
-    
+
 
             for i in data:
 
-                yield [eval(i[0]), eval(i[1]), eval(i[2]), i[3]]
+                yield [eval(i[0]), eval(i[1]), i[2], i[3]]
 
 
 
@@ -172,12 +175,13 @@ class User_info:
     
 
     @staticmethod
-    def Del_func(function):
+    def Del_func(function, dim):
     
 
         statement1 = f"""DELETE FROM Graphs
                          WHERE Username = "{user}"
-                         AND function = "{function}" """
+                         AND function = "{function}"
+                         AND dim = "{dim}" """
 
         
 
