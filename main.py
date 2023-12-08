@@ -12,7 +12,6 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 import numpy as np
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
-import ctypes
 
 
 # Add my other files
@@ -1000,160 +999,70 @@ class dim2_rotation_matrix:
 class dim3_rotation_matrix:
       
 
-      @staticmethod
-      def rotate_z():
-              
-
-              is_selected = app.mylist.curselection()
+    def __init__(self):
 
 
-              if is_selected:
+       is_selected = app.mylist.curselection()
 
+
+       if is_selected:
+
+
+              fx = (app.mylist.get(is_selected[0]))[5:]
+
+
+              x = range_x(-10, 10, 10)
+
+
+              X = ([x for i in x])
+
+
+              Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
+
+
+              Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
+
+              gamma = app.z_slider.get() * (pi/180)
+              beta = app.y_slider.get() * (pi/180)
+              alpha = app.x_slider.get() * (pi/180)
+
+              R = [[[cos(beta)*cos(gamma)], [sin(alpha)*sin(beta)*cos(gamma)-cos(alpha)*sin(gamma)], [cos(alpha)*sin(beta)*cos(gamma) + sin(alpha)*sin(gamma)]], 
+                  [[cos(beta)*sin(gamma)], [sin(alpha)*sin(beta)*sin(gamma)+cos(alpha)*cos(gamma)], [cos(alpha)*sin(beta)*sin(gamma)-sin(alpha)*cos(gamma)]],
+                  [[-sin(beta)],       [sin(alpha)*cos(beta)],                      [cos(alpha)*cos(beta)]]]
+
+
+              rot_x = [R[i][0][0]*x + R[i][1][0]*y + R[i][2][0] for x, y, z in zip(X[i],Y[i],Z[i]) for i in range(len(X))]
+
+
+
+
+              try:
+                                   
+                     User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
 
                      fx = (app.mylist.get(is_selected[0]))[5:]
 
 
-                     x = range_x(-10, 10, 10)
+                     obj = dic3d[fx]
+                     dic3d.remove(fx)
 
-
-                     X = ([x for i in x])
-
-
-                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
-
-
-                     Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
-
-
-                     θ = app.z_slider.get() * (pi/180)
-
-
-                     rot_x = [[x*math.cos(θ) - y*math.sin(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
-                     rot_y = [[x*math.sin(θ) + y*math.cos(θ) for x, y in zip(X[i], Y[i])] for i in range(len(X))]
-                     rot_z = Z
-
-
-                     try:
-                                   
-                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
-
-                            fx = (app.mylist.get(is_selected[0]))[5:]
-
-
-                            obj = dic3d[fx]
-                            dic3d.remove(fx)
-
-                            obj.remove()
+                     obj.remove()
                             
-                     except:
+              except:
                                   
-                            print("failed")
+                     print("failed")
                                   
-                            #line = rot_list[is_selected[0]].pop()
-                            #line.remove()
+                     #line = rot_list[is_selected[0]].pop()
+                     #line.remove()
 
 
-                     graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
-                     rot_list[is_selected[0]] = graph
+              graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
+              rot_list[is_selected[0]] = graph
 
 
-                     app.fig_canvas.draw()
+              app.fig_canvas.draw()
 
-
-
-
-
-      @staticmethod
-      def rotate_y():
-              
-
-              is_selected = app.mylist.curselection()
-
-
-              if is_selected:
-
-
-                     get_info = app.plotlist[is_selected[0]]
-
-
-                     x = range_x(-10, 10, 10)
-
-
-                     X = ([x for i in x])
-
-
-                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
-
-
-                     Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
-
-
-                     θ = app.y_slider.get() * (pi/180)
-
-
-                     rot_x = [[x*math.cos(θ) + z*math.sin(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))]
-                     rot_y = Y
-                     rot_z = np.array([[-x*math.sin(θ) + z*math.cos(θ) for x, z in zip(X[i], Z[i])] for i in range(len(X))])
-
-
-                     app.plotlist.remove(get_info)
-                     get_info[1].remove()
-
-
-                     graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
-
-
-                     app.fig_canvas.draw()
-
-
-                     app.plotlist.append([get_info[0] , graph])
-
-
-
-      @staticmethod
-      def rotate_x():
-              
-              
-              is_selected = app.mylist.curselection()
-
-
-              if is_selected:
-
-
-                     get_info = app.plotlist[is_selected[0]]
-
-
-                     x = range_x(-10, 10, 10)
-
-
-                     X = ([x for i in x])
-
-
-                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
-
-
-                     Z = np.array([[eval(get_info[0]) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
-
-
-                     θ = app.x_slider.get() * (pi/180)
-
-
-                     rot_x = X
-                     rot_y = [[y*math.cos(θ) - z*math.sin(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))]
-                     rot_z = np.array([[y*math.sin(θ) + z*math.cos(θ) for y, z in zip(Y[i], Z[i])] for i in range(len(X))])
-
-
-                     app.plotlist.remove(get_info)
-                     get_info[1].remove()
-
-
-                     graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
-
-
-                     app.fig_canvas.draw()
-
-
-                     app.plotlist.append([get_info[0] , graph])
 
 
 
