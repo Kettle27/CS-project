@@ -606,10 +606,7 @@ class Graph_tools(App):
                             
                             except:
                                   
-                                  print("failed")
-                                  
-                                  #line = rot_list[is_selected[0]].pop()
-                                  #line.remove()
+                                  rot_list[is_selected[0]].remove()
                                   
 
 
@@ -845,21 +842,21 @@ class Index(App):
 
 
             app.x_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
-             lambda x :dim3_rotation_matrix.rotate_x())
+             lambda x :dim3_rotation_matrix())
               
 
             app.x_slider.place(x=10,y=10)
 
 
             app.y_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
-             lambda x :dim3_rotation_matrix.rotate_y())
+             lambda x :dim3_rotation_matrix())
               
 
             app.y_slider.place(x=220,y=10)
 
 
             app.z_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
-             lambda x :dim3_rotation_matrix.rotate_z())
+             lambda x :dim3_rotation_matrix())
               
 
             app.z_slider.place(x=430,y=10)
@@ -1027,14 +1024,15 @@ class dim3_rotation_matrix:
               beta = app.y_slider.get() * (pi/180)
               alpha = app.x_slider.get() * (pi/180)
 
-              R = [[[cos(beta)*cos(gamma)], [sin(alpha)*sin(beta)*cos(gamma)-cos(alpha)*sin(gamma)], [cos(alpha)*sin(beta)*cos(gamma) + sin(alpha)*sin(gamma)]], 
-                  [[cos(beta)*sin(gamma)], [sin(alpha)*sin(beta)*sin(gamma)+cos(alpha)*cos(gamma)], [cos(alpha)*sin(beta)*sin(gamma)-sin(alpha)*cos(gamma)]],
-                  [[-sin(beta)],       [sin(alpha)*cos(beta)],                      [cos(alpha)*cos(beta)]]]
+
+              R = [[[math.cos(beta)*math.cos(gamma)], [math.sin(alpha)*math.sin(beta)*math.cos(gamma)-math.cos(alpha)*math.sin(gamma)], [math.cos(alpha)*math.sin(beta)*math.cos(gamma) + math.sin(alpha)*math.sin(gamma)]], 
+                  [[math.cos(beta)*math.sin(gamma)], [math.sin(alpha)*math.sin(beta)*math.sin(gamma)+math.cos(alpha)*math.cos(gamma)], [math.cos(alpha)*math.sin(beta)*math.sin(gamma)-math.sin(alpha)*math.cos(gamma)]],
+                  [[-math.sin(beta)],       [math.sin(alpha)*math.cos(beta)],                      [math.cos(alpha)*math.cos(beta)]]]
 
 
-              rot_x = [R[i][0][0]*x + R[i][1][0]*y + R[i][2][0] for x, y, z in zip(X[i],Y[i],Z[i]) for i in range(len(X))]
-
-
+              rot_x = [[R[0][0][0]*x + R[0][1][0]*y + R[0][2][0]*z for x, y, z in zip(X[i], Y[i], Z[i])] for i in range(len(X))]
+              rot_y = [[R[1][0][0]*x + R[1][1][0]*y + R[1][2][0]*z for x, y, z in zip(X[i], Y[i], Z[i])] for i in range(len(X))]
+              rot_z = np.array([[R[2][0][0]*x + R[2][1][0]*y + R[2][2][0]*z for x, y, z in zip(X[i], Y[i], Z[i])] for i in range(len(X))])
 
 
               try:
@@ -1050,11 +1048,8 @@ class dim3_rotation_matrix:
                      obj.remove()
                             
               except:
-                                  
-                     print("failed")
-                                  
-                     #line = rot_list[is_selected[0]].pop()
-                     #line.remove()
+                                           
+                     rot_list[is_selected[0]].remove()
 
 
               graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
