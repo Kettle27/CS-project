@@ -4,8 +4,20 @@ import math
 
 
 
-
 class fact:
+
+
+    """Returns the Factorial of a number or a list of numbers:
+    
+    Case 1:
+    If the number is a positive integer then we do normal recursion
+    to find the factorial
+
+    Case 2:
+    If the number is not a positive integer (either a decimal and or 
+    a negative number) then we use the gamma function
+
+    """
 
 
     def __init__(self,val):
@@ -1026,35 +1038,3 @@ class tan:
         return other ** self.tan
     
 
-
-
-class CustomDictionary:
-
-
-    def __init__(self):
-
-
-        self.dic = {}
-
-    
-    def add(self, fx, val):
-
-
-        self.dic[fx] = val
-
-
-    def __getitem__(self, key):
-
-
-        return self.dic[key]
-
-    
-    def remove(self, fx):
-
-        self.dic.pop(fx)
-    
-
-    def __repr__(self):
-
-
-        return f"{self.dic}"
