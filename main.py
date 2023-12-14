@@ -9,7 +9,6 @@
 from tkinter import *
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
-import numpy as np
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
 
@@ -50,7 +49,7 @@ class App(Frame):
               # title of program
 
 
-              root.title('GraphingCalc.exe')
+              root.title('GraphingCalc')
 
 
               # dimentions of the screen (in pixels)
@@ -441,17 +440,14 @@ class Graph_tools(App):
                             x = range_x(-50, 50, 2000)
 
 
-                            y = [eval(fx) for x in x]
+                            y = [eval(fx) for x in x] 
 
 
                             # then plot the values of x and y into matplotlib
 
                             graph = app.ax.plot(x, y, color = "r")
 
-                            rot_list.append(0)
-                            dic2d.add(fx, graph)
-                            print(rot_list)
-                            print(dic2d[fx])
+                            graph_list.append(graph)
                             
                             app.fig_canvas.draw()
 
@@ -525,8 +521,7 @@ class Graph_tools(App):
 
 
                             User_info.Add_func("3D", fx, X, Y, Z)
-                            rot_list.append(0)
-                            dic3d.add(fx, graph)
+                            graph_list.append(graph)
 
 
                             app.mylist.insert(END, f" z = {fx}")
@@ -560,37 +555,19 @@ class Graph_tools(App):
                      if str(app.dim_indx_btn.label)[16:18] == "2D":
 
 
-                            print(rot_list)
+                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
 
-                            try:
+                            fx = (app.mylist.get(is_selected[0]))[5:]
 
-                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
+                            line = graph_list[is_selected[0]].pop()
+                            line.remove()
 
-                                   fx = (app.mylist.get(is_selected[0]))[5:]
-
-                                   obj = dic2d[fx]
-                                   dic2d.remove(fx)
-
-                                   line = obj.pop()
-                                   line.remove()
-
-                                   rot_list.pop(is_selected[0])
+                            graph_list.pop(is_selected[0])
                             
-                            except Exception as e:
-                                  
-                                  print(e)
-
-                                  line = rot_list[is_selected[0]].pop()
-                                  line.remove()
-                                  rot_list.pop(is_selected[0])
-                                  
-       
 
                             app.fig_canvas.draw()
 
                             app.mylist.delete(is_selected[0])
-
-                            print(rot_list)
 
 
                      # if using 3D plane 
@@ -602,25 +579,15 @@ class Graph_tools(App):
                             # remove the graph and remove the data from the list
 
 
-                            try:
-                                   
-                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
 
-                                   fx = (app.mylist.get(is_selected[0]))[5:]
+                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
+
+                            fx = (app.mylist.get(is_selected[0]))[5:]
 
 
-                                   obj = dic3d[fx]
-                                   dic3d.remove(fx)
-                                   rot_list.pop(0)
+                            graph_list[is_selected[0]].remove()
 
-                                   obj.remove()
-                            
-                            except:
-                                  
-                                  rot_list[is_selected[0]].remove()
-                                  rot_list.pop(0)
-                                  
-
+                            graph_list.pop(is_selected[0])
 
                             app.fig_canvas.draw()
 
@@ -652,25 +619,16 @@ class Graph_tools(App):
                             # remove graph and data
                             # push function back into the entry_stack
 
-                            try:
+                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
 
-                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
+                            fx = (app.mylist.get(is_selected[0]))[5:]
 
-                                   fx = (app.mylist.get(is_selected[0]))[5:]
+                            line = graph_list[is_selected[0]].pop()
+                            line.remove()
 
-                                   obj = dic2d[fx]
-                                   dic2d.remove(fx)
+                            graph_list.pop(is_selected[0])
 
-                                   line = obj.pop()
-                                   line.remove()
-                            
-                            except:
-                                  
-                                  
-                                  line = rot_list[is_selected[0]].pop()
-                                  line.remove()
-                                  
-
+       
                             app.fig_canvas.draw()
 
               
@@ -691,22 +649,14 @@ class Graph_tools(App):
                             # push function back into the entry_stack
 
                      
-                            try:
 
-                                   User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
+                            User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
 
-                                   fx = (app.mylist.get(is_selected[0]))[5:]
+                            graph_list[is_selected[0]].remove()
 
-                                   obj = dic3d[fx]
-                                   dic3d.remove(fx)
+                            graph_list.pop(is_selected[0])
 
-                                   obj.remove()
-                            
-                            except:
                                   
-                                  rot_list[is_selected[0]].remove()
-                                  
-
                             app.fig_canvas.draw()
 
               
@@ -773,7 +723,7 @@ class Index(App):
 
 
             app.dim_indx_btn.label.set_text("2D")
-            rot_list = []
+            graph_list = []
             app.mylist.delete(0, END)
             
             for x, y, fx in User_info.Load_func("2D"):
@@ -785,8 +735,7 @@ class Index(App):
 
               User_info.Add_func("2D", fx, x, y)
 
-              dic2d.add(fx, graph)
-              rot_list.append(0)
+              graph_list.append(graph)
 
             app.fig_canvas.draw()
 
@@ -824,7 +773,7 @@ class Index(App):
 
 
             app.dim_indx_btn.label.set_text("3D")
-            rot_list = []
+            graph_list = []
             app.mylist.delete(0, END)
 
 
@@ -840,8 +789,7 @@ class Index(App):
 
               User_info.Add_func("3D", fx, x, y, z)
 
-              dic3d.add(fx, graph)
-              rot_list.append(0)
+              graph_list.append(graph)
 
 
             app.fig_canvas.draw()
@@ -976,22 +924,13 @@ class dim2_rotation_matrix:
               self.rot_x = [x*math.cos(θ) - y*math.sin(θ) for x, y in zip(X, Y)]
               self.rot_y = [x*math.sin(θ) + y*math.cos(θ) for x, y in zip(X, Y)]
 
-              try:
-                     
-                     obj = dic2d[fx]
-                     dic2d.remove(fx)
 
-                     line = obj.pop()
-                     line.remove()
-                     
-              except:
-
-                     line = rot_list[is_selected[0]].pop()
-                     line.remove()
+              line = graph_list[is_selected[0]].pop()
+              line.remove()
 
               
               graph = app.ax.plot(self.rot_x, self.rot_y, color = "r")
-              rot_list[is_selected[0]] = graph
+              graph_list[is_selected[0]] = graph
 
               app.fig_canvas.draw()
 
@@ -1044,68 +983,14 @@ class dim3_rotation_matrix:
               rot_z = np.array([[R[2][0][0]*x + R[2][1][0]*y + R[2][2][0]*z for x, y, z in zip(X[i], Y[i], Z[i])] for i in range(len(X))])
 
 
-              try:
-                                   
-                     User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
-
-                     fx = (app.mylist.get(is_selected[0]))[5:]
-
-
-                     obj = dic3d[fx]
-                     dic3d.remove(fx)
-
-                     obj.remove()
-                            
-              except:
-                                           
-                     rot_list[is_selected[0]].remove()
+              graph_list[is_selected[0]].remove()
 
 
               graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
-              rot_list[is_selected[0]] = graph
+              graph_list[is_selected[0]] = graph
 
 
               app.fig_canvas.draw()
-
-
-
-class CustomDictionary:
-
-
-    def __init__(self):
-
-
-        self.dic = {}
-
-    
-    def add(self, fx, val):
-
-
-        if fx in self.dic:
-            
-            rot_list[app.mylist.size()] = val
-
-        else:
-
-          self.dic[fx] = val
-
-
-    def __getitem__(self, key):
-
-
-        return self.dic[key]
-
-    
-    def remove(self, fx):
-
-        self.dic.pop(fx)
-    
-
-    def __repr__(self):
-
-
-        return f"{self.dic}"
-
 
 
 
@@ -1115,11 +1000,9 @@ if __name__ == "__main__":
 
     root = Tk()
     app = App(root)
-    dic2d = CustomDictionary()
-    dic3d = CustomDictionary()
 
-    global rot_list
-    rot_list = []
+    global graph_list
+    graph_list = []
 
     for x, y, fx in User_info.Load_func("2D"):
           
@@ -1131,8 +1014,7 @@ if __name__ == "__main__":
 
        User_info.Add_func("2D", fx, x, y)
 
-       dic2d.add(fx, graph)
-       rot_list.append(0)
+       graph_list.append(graph)
 
 
     root.mainloop()
