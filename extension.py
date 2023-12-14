@@ -1,6 +1,7 @@
 from math import pi
 from math import e
 import math
+import numpy as np
 
 
 
@@ -230,7 +231,7 @@ class intergration:
 class log:
 
 
-    def __init__(self,val):
+    def __init__(self,val, base = 10):
 
 
         super(log).__repr__()
@@ -242,13 +243,13 @@ class log:
         if self.val > 0:
 
 
-            self.log = math.log(self.val)
+            self.log = math.log(self.val, base)
         
 
         else:
 
 
-            self.log = 0
+            self.log = np.nan
         
         
     def __repr__(self):
@@ -907,9 +908,6 @@ class tan:
 
 
     def __init__(self,theta):
-
-
-        super(tan).__repr__()
 
 
         self.tan = (sin(theta)/cos(theta))
