@@ -458,8 +458,9 @@ class Graph_tools(App):
                             app.mylist.insert(END, f" y = {fx}")
 
 
-                     except Exception as e:
-                            print(e)
+                     except:
+                           
+                            pass
 
 
               # graph is 3D
@@ -557,7 +558,6 @@ class Graph_tools(App):
 
                             User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
 
-                            fx = (app.mylist.get(is_selected[0]))[5:]
 
                             line = graph_list[is_selected[0]].pop()
                             line.remove()
@@ -582,10 +582,9 @@ class Graph_tools(App):
 
                             User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "3D")
 
-                            fx = (app.mylist.get(is_selected[0]))[5:]
-
 
                             graph_list[is_selected[0]].remove()
+
 
                             graph_list.pop(is_selected[0])
 
@@ -621,10 +620,10 @@ class Graph_tools(App):
 
                             User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
 
-                            fx = (app.mylist.get(is_selected[0]))[5:]
 
                             line = graph_list[is_selected[0]].pop()
                             line.remove()
+                            
 
                             graph_list.pop(is_selected[0])
 
@@ -711,8 +710,9 @@ class Index(App):
 
             app.fig.delaxes(app.fig.axes[1])
 
-
+            app.fig.set_size_inches((8,5))
             app.ax = app.fig.add_subplot(111)
+            app.fig.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.9)
             app.ax.axvline(color="black", linestyle="--")
             app.ax.axhline(color="black", linestyle="--")
             app.ax.set_xlim(-10, 10)
@@ -723,7 +723,7 @@ class Index(App):
 
 
             app.dim_indx_btn.label.set_text("2D")
-            graph_list = []
+            graph_list.clear()
             app.mylist.delete(0, END)
             
             for x, y, fx in User_info.Load_func("2D"):
@@ -765,15 +765,21 @@ class Index(App):
 
 
             app.ax = app.fig.add_subplot(111, projection="3d")
+            app.fig.set_figheight(8)
+            app.fig.set_figwidth(8)
+            app.fig.subplots_adjust(left=0, right=0.9, bottom=0, top=1.4)
             app.ax.set_xlim(-10, 10)
             app.ax.set_ylim(-10, 10)
             app.ax.set_ylabel("Y")
             app.ax.set_xlabel("X")
             app.ax.set_zlabel("Z")
+            app.ax.set_xlim(-10, 10)
+            app.ax.set_ylim(-10, 10)
+            app.ax.set_zlim(-10, 10)
 
 
             app.dim_indx_btn.label.set_text("3D")
-            graph_list = []
+            graph_list.clear()
             app.mylist.delete(0, END)
 
 
@@ -956,7 +962,7 @@ class dim3_rotation_matrix:
               fx = (app.mylist.get(is_selected[0]))[5:]
 
 
-              x = range_x(-10, 10, 10)
+              x = range_x(-10, 10, 100)
 
 
               X = ([x for i in x])
@@ -984,6 +990,7 @@ class dim3_rotation_matrix:
 
 
               graph_list[is_selected[0]].remove()
+
 
 
               graph = app.ax.plot_surface(rot_x, rot_y, rot_z, color = "r")
