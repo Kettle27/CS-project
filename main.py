@@ -29,7 +29,6 @@ backend_bases.NavigationToolbar2.toolitems = (
     ('Home', 'Reset original view', 'home', 'home'),
     ('Back', 'Back to  previous view', 'back', 'back'),
     ('Forward', 'Forward to next view', 'forward', 'forward'),
-    ('Pan', 'Pan axes with left mouse, zoom with right', 'move', 'pan'),
     ('Zoom', 'Zoom to rectangle', 'zoom_to_rect', 'zoom'))
 
 
@@ -437,7 +436,7 @@ class Graph_tools(App):
                             """
                             
 
-                            x = range_x(-50, 50, 2000)
+                            x = range_x(-10, 10, 40000)
 
 
                             y = [eval(fx) for x in x] 
@@ -844,7 +843,8 @@ class entry_stack:
            "4" : "4", "5" : "5", "6" : "6",
            "7" : "7", "8" : "8", "9" : "9",
            "." : ".", "/" : "/", "*" : "*",
-           "-" : "-", "+" : "+", "^" : "**",}
+           "-" : "-", "+" : "+", "^" : "**",
+           "," : ","}
 
 
     def __len__(self):
@@ -918,7 +918,7 @@ class dim2_rotation_matrix:
               fx = (app.mylist.get(is_selected[0]))[5:]
 
 
-              X = range_x(-50, 50, 2000)
+              X = range_x(-10, 10, 2000)
 
 
               Y = [eval(fx) for x in X]
@@ -1007,6 +1007,25 @@ if __name__ == "__main__":
 
     root = Tk()
     app = App(root)
+
+    root.bind("<comma>", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push(","), app.plot_entry.config(state = DISABLED)])
+    root.bind("0", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("0"), app.plot_entry.config(state = DISABLED)])
+    root.bind("1", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("1"), app.plot_entry.config(state = DISABLED)])
+    root.bind("2", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("2"), app.plot_entry.config(state = DISABLED)])
+    root.bind("3", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("3"), app.plot_entry.config(state = DISABLED)])
+    root.bind("4", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("4"), app.plot_entry.config(state = DISABLED)])
+    root.bind("5", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("5"), app.plot_entry.config(state = DISABLED)])
+    root.bind("6", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("6"), app.plot_entry.config(state = DISABLED)])
+    root.bind("7", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("7"), app.plot_entry.config(state = DISABLED)])
+    root.bind("8", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("8"), app.plot_entry.config(state = DISABLED)])
+    root.bind("9", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("9"), app.plot_entry.config(state = DISABLED)])
+    root.bind("<BackSpace>", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.pop(), app.plot_entry.config(state=DISABLED)])
+    root.bind("<period>", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("."), app.plot_entry.config(state = DISABLED)])
+    root.bind("(", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("("), app.plot_entry.config(state = DISABLED)])
+    root.bind(")", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push(")"), app.plot_entry.config(state = DISABLED)])
+    root.bind("!", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("fact"), app.plot_entry.config(state = DISABLED)])
+    root.bind("x", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("x"), app.plot_entry.config(state = DISABLED)])
+    root.bind("y", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("y"), app.plot_entry.config(state = DISABLED)])
 
     global graph_list
     graph_list = []
