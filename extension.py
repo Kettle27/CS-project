@@ -38,9 +38,14 @@ class fact:
 
 
             self.fact = self.calc_int(self.val)
+
+        
+        elif self.val < 0 and isinstance(self.val, int):
+
+            self.fact =  np.nan
         
 
-        elif isinstance(self.val, (float)):
+        elif isinstance(self.val, float):
 
 
             self.fact = self.calc_float(self.val)
