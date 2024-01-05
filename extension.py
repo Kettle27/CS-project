@@ -914,8 +914,13 @@ class tan:
 
     def __init__(self,theta):
 
+        if theta % (pi/2) <= 0.1:
 
-        self.tan = (sin(theta)/cos(theta))
+            self.tan = np.nan
+
+        else:
+
+            self.tan = (sin(theta)/cos(theta))
 
 
     def  __float__(self):
