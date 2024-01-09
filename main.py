@@ -29,6 +29,7 @@ backend_bases.NavigationToolbar2.toolitems = (
     ('Home', 'Reset original view', 'home', 'home'),
     ('Back', 'Back to  previous view', 'back', 'back'),
     ('Forward', 'Forward to next view', 'forward', 'forward'),
+    ('Pan', 'Pan axes with left mouse, zoom with right', 'move', 'pan'),
     ('Zoom', 'Zoom to rectangle', 'zoom_to_rect', 'zoom'))
 
 
@@ -42,6 +43,11 @@ class App(Frame):
 
 
               super(App, self).__init__(master)
+
+
+              # grid self
+
+
               self.grid()
 
 
@@ -66,6 +72,8 @@ class App(Frame):
               self.main.grid()
 
 
+
+
        def launch_main(self):
 
 
@@ -79,7 +87,7 @@ class App(Frame):
               self.calculatorFrame.pack(side = RIGHT, fill=Y)
 
 
-              # calculatorFrame holds the Tkinter listbox and the Tkinter Scrollbar
+              # calculatorFrame2 holds the Tkinter listbox and the Tkinter Scrollbar
               # used for displaying the current equations and helping to edit and delete equations
 
               self.calculatorFrame2  = Frame(self.calculatorFrame , width= 200, height = 300, background="#3c4043")
@@ -88,7 +96,7 @@ class App(Frame):
               
               # plotFrame holds the matplotlib graph aswell as a matplotlib button which calls the class Index
 
-              self.plotFrame = Frame(self.main, width= 800, height=500, background="red")
+              self.plotFrame = Frame(self.main, width= 800, height= 500)
               self.plotFrame.pack(anchor=NW)
 
 
@@ -328,7 +336,6 @@ class App(Frame):
               self.mylist.pack(side = LEFT, fill = BOTH )
               self.scrollbar.config(command = self.mylist.yview )
 
-
               # create matplotlib Figure
 
 
@@ -416,33 +423,13 @@ class Graph_tools(App):
               if str(app.dim_indx_btn.label)[16:18] == "2D":
 
 
+
                      # the method will try and do the calculations
                      # if it fails it does not plot anything
 
-
                      try:
-
-
-                            """How 2D plotting works:
-                     ---------------------------------------------------------------------------------
-                            we get a list with 2000 elements between -50 and 50
-                            this is used as our x values
-
-                            list comprehension is used to iterate through our x values
-                            eval(fx) will use the string in fx as an expression 
-                            this means the iterated value of x will be substituted into the expression
-                            after this is calculated it appends the number into the new list
-                     ---------------------------------------------------------------------------------
-                            """
-                            
-
-                            x = range_x(-10, 10, 40000)
-
-
-                            y = [eval(fx) for x in x] 
-
-
-                            # then plot the values of x and y into matplotlib
+                           
+                            x, y = User_info.Get_func(fx, "2D")
 
                             graph = app.ax.plot(x, y, color = "r")
 
@@ -457,9 +444,48 @@ class Graph_tools(App):
                             app.mylist.insert(END, f" y = {fx}")
 
 
+
                      except:
+
+                            try:
+
+                                   """How 2D plotting works:
+                            ---------------------------------------------------------------------------------
+                                   we get a list with 40000 elements between -25 and 25
+                                   this is used as our x values
+
+                                   list comprehension is used to iterate through our x values
+                                   eval(fx) will use the string in fx as an expression 
+                                   this means the iterated value of x will be substituted into the expression
+                                   after this is calculated it appends the number into the new list
+                            ---------------------------------------------------------------------------------
+                                   """
+                     
+
+                                   x = range_x(-25, 25, 40000)
+
+
+                                   y = [eval(fx) for x in x] 
+
+
+                                   # then plot the values of x and y into matplotlib
+
+                                   graph = app.ax.plot(x, y, color = "r")
+
+                                   graph_list.append(graph)
+                            
+                                   app.fig_canvas.draw()
+
+                                   # then add the equation used and the graph (value for graph is an address)
+
+                                   User_info.Add_func("2D", fx, x, y)
+
+                                   app.mylist.insert(END, f" y = {fx}")
+
+
+                            except Exception as error:
                            
-                            pass
+                                   print(error)
 
 
               # graph is 3D
@@ -471,66 +497,85 @@ class Graph_tools(App):
                      # if it fails it does not plot anything
 
                      try:
+                           
+                            x, y, z = User_info.Get_func(fx, "3D")
 
+                            graph = app.ax.plot(x, y, z, color = "r")
 
-                            """How 3d plotting works:
-                     ------------------------------------------------------------------------------------------------------
-                            First we get a list with 100 elements between -10,10 (100 has been chosen to maintain lag).
-                            Next we use this list to make a matrix (X) which has the size: length of list x length of list
-                            we use matrix X as the x values of our graph.
-
-                            After we make a new matrix (Y) which is the transposed matrix of matrix X
-                            transposing a matrix switches the row and columns of a matrix.
-
-                            For example:
-
-                            X = [1,2,3]    Y = [1,1,1]
-                                [1,2,3]        [2,2,2]
-                                [1,2,3]        [3,3,3]
-
-                            Finally we can get our z values by subbing in X and Y into the equation given.
-                            To do this we need to iterate through the matricies and adding the values into a new matrix (Z).
-
-                            For example using the function z = x + y:
-
-                            X = [1,2,3]    Y = [1,1,1]    Z = [2,3,4]
-                                [1,2,3]        [2,2,2]        [3,4,5]
-                                [1,2,3]        [3,3,3]        [4,5,6]
-
-                            Once we have the matricies X,Y,Z we can now plot our graph
-                            which uses the matplotlib plot_surface function
-                     ------------------------------------------------------------------------------------------------------
-                      """
-
-
-                            x = range_x(-10, 10, 100)
-
-
-                            X = ([x for i in x])
-
-
-                            Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
-
-
-                            Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
-
-
-
-                            graph = app.ax.plot_surface(X,Y,Z, color = "r")
+                            graph_list.append(graph)
+                            
                             app.fig_canvas.draw()
 
+                            # then add the equation used and the graph (value for graph is an address)
 
-                            User_info.Add_func("3D", fx, X, Y, Z)
-                            graph_list.append(graph)
-
+                            User_info.Add_func("3D", fx, x, y, z)
 
                             app.mylist.insert(END, f" z = {fx}")
 
 
                      except:
 
+                            try:
 
-                            pass
+
+                                   """How 3d plotting works:
+                            ------------------------------------------------------------------------------------------------------
+                                   First we get a list with 100 elements between -10,10 (100 has been chosen to maintain lag).
+                                   Next we use this list to make a matrix (X) which has the size: length of list x length of list
+                                   we use matrix X as the x values of our graph.
+
+                                   After we make a new matrix (Y) which is the transposed matrix of matrix X
+                                   transposing a matrix switches the row and columns of a matrix.
+
+                                   For example:
+
+                                   X = [1,2,3]    Y = [1,1,1]
+                                       [1,2,3]        [2,2,2]
+                                       [1,2,3]        [3,3,3]
+
+                                   Finally we can get our z values by subbing in X and Y into the equation given.
+                                   To do this we need to iterate through the matricies and adding the values into a new matrix (Z).
+
+                                   For example using the function z = x + y:
+
+                                   X = [1,2,3]    Y = [1,1,1]    Z = [2,3,4]
+                                       [1,2,3]        [2,2,2]        [3,4,5]
+                                       [1,2,3]        [3,3,3]        [4,5,6]
+
+                                   Once we have the matricies X,Y,Z we can now plot our graph
+                                   which uses the matplotlib plot_surface function
+                            ------------------------------------------------------------------------------------------------------
+                            """
+
+
+                                   x = range_x(-10, 10, 100)
+
+
+                                   X = ([x for i in x])
+
+
+                                   Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
+
+
+                                   Z = np.array([[eval(fx) for x,y in zip(X[i],Y[i])] for i in range(len(X))])
+
+
+
+                                   graph = app.ax.plot_surface(X,Y,Z, color = "r")
+                                   app.fig_canvas.draw()
+
+
+                                   User_info.Add_func("3D", fx, X, Y, Z)
+                                   graph_list.append(graph)
+
+
+                                   app.mylist.insert(END, f" z = {fx}")
+
+
+                            except:
+
+
+                                   pass
 
 
        @staticmethod             
@@ -915,17 +960,12 @@ class dim2_rotation_matrix:
 
        if is_selected:
 
+
               fx = (app.mylist.get(is_selected[0]))[5:]
 
-
-              X = range_x(-10, 10, 2000)
-
-
-              Y = [eval(fx) for x in X]
-
+              X, Y = User_info.Get_func(fx, "2D")
 
               θ = (app.slider.get() * (pi/180))
-
 
               self.rot_x = [x*math.cos(θ) - y*math.sin(θ) for x, y in zip(X, Y)]
               self.rot_y = [x*math.sin(θ) + y*math.cos(θ) for x, y in zip(X, Y)]
@@ -1044,3 +1084,4 @@ if __name__ == "__main__":
 
 
     root.mainloop()
+
