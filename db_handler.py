@@ -46,7 +46,7 @@ class Login:
         cursor.execute(statement)
 
 
-        if cursor.fetchone() == []:
+        if cursor.fetchall() == []:
 
 
             statement = f"""INSERT INTO Logins (Username, Password)
@@ -54,12 +54,14 @@ class Login:
             cursor.execute(statement)
             conn.commit()
 
+            return True
+
 
 
         else:
                 
 
-            return True
+            return False
 
         
 
@@ -95,6 +97,8 @@ class User_info:
     
 
             for i in data:
+
+                nan = np.nan
 
                 yield [eval(i[0]), eval(i[1]), i[2]]
 
@@ -193,14 +197,53 @@ class User_info:
     @staticmethod
     def Get_func(function, dim):
 
-        statement1 = f"""SELECT x_val, y_val FROM GraphInfo
-                        WHERE EXISTS (SELECT Username FROM Graphs
-                                      WHERE Username = "{user}"
-                                      AND GraphInfo.function = "{function}")
-                                      AND dim = "{dim}" """
+        if dim == "2D":
+
+            statement1 = f"""SELECT x_val, y_val FROM GraphInfo
+                         WHERE function = "{function}" 
+                         AND z_val IS NULL"""
         
-        cursor.execute(statement1)
+            cursor.execute(statement1)
 
-        data = cursor.fetchall()[0]
+        
+            data = cursor.fetchall()
 
-        return eval(data[0]), eval(data[1])
+            if data != []:
+
+                nan = np.nan
+
+                return eval(data[0][0]), eval(data[0][1])
+            
+            else:
+
+                raise NameError
+        
+
+
+        elif dim == "3D":
+
+            statement1 = f"""SELECT x_val, y_val, z_val FROM GraphInfo
+                         WHERE function = "{function}" 
+                         AND z_val IS NOT NULL"""
+        
+            cursor.execute(statement1)
+
+            data = cursor.fetchall()
+
+            if data != []:
+
+                nan = np.nan
+
+                return eval(data[0][0]), eval(data[0][1]), eval(data[0][2])
+            
+            else:
+
+                raise NameError
+        
+        else:
+
+            raise TypeError
+
+    
+
+
