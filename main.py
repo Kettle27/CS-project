@@ -2,28 +2,19 @@
 # Author - George Sil
 
 
-
 # Add all needed Libraries
-
-
 from tkinter import *
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib import backend_bases
 from matplotlib.widgets import Button as Btn
 
-
 # Add my other files
-
-
 from extension import *
 from db_handler import *
 
-
 # Configure which matplotlib tools to use
 # Currently - Home, Back, Forward, Pan, Zoom
-
-
 backend_bases.NavigationToolbar2.toolitems = (
     ('Home', 'Reset original view', 'home', 'home'),
     ('Back', 'Back to  previous view', 'back', 'back'),
@@ -31,244 +22,208 @@ backend_bases.NavigationToolbar2.toolitems = (
     ('Pan', 'Pan axes with left mouse, zoom with right', 'move', 'pan'),
     ('Zoom', 'Zoom to rectangle', 'zoom_to_rect', 'zoom'))
 
-
 # Create validation class for logins and sign ups
-
-
 class Val(Frame):
 
-
-    def __init__(self,master):
+	# Tk() as parameter	
+	def __init__(self,master):
         
+    	# Inheritance class
+		super(Val, self).__init__(master)
+		self.grid()
 
-       # inheritance class
+        # Create frames
+		self.loginFrame = Frame(self)
+		self.signupFrame = Frame(self)
 
-       super(Val, self).__init__(master)
-       self.grid()
+        # Place login widgets and the frame
+		self.create_login_widgets()
+		self.loginFrame.grid()
 
+    # Function plots all login widgets   
+	def create_login_widgets(self):
 
-       # create frames
+		# Error label is invisible until we need to use it
+		self.Error_label = Label(self.loginFrame,text=" ")
+		self.Error_label.grid(row=0, column=1, padx=10, pady=10)
 
-       self.loginFrame = Frame(self)
-       self.signupFrame = Frame(self)
+		# Username and Password labels
+		self.Username_label = Label(self.loginFrame,text="Username:").grid(row=1, column=0, padx=10, pady=10)
+		self.Password_label = Label(self.loginFrame,text="Password:").grid(row=2,column=0, padx=10, pady=10)
 
+		# Place username and password entries
+		self.username_entry = Entry(self.loginFrame, width=50)
+		self.username_entry.grid(row=1, column=1, columnspan=2, padx=5)
+		self.password_entry = Entry(self.loginFrame,width = 50, show="*")
+		self.password_entry.grid(row =2, column=1, columnspan=2,padx=5)
 
-       # initiate login widgets
+       	# show and hide functions change the password from hidden to shown
+		def show():
 
-       self.create_login_widgets()
-       self.loginFrame.grid()
+			# Change the button's command to hide and then show the password
+			toggle_button.config(text="hide ",command=lambda:hide(),relief="groove")
+			self.password_entry.config(show="")
+                  
+		def hide():
 
-
-
-    # function plots all login widgets   
-
-
-    def create_login_widgets(self):
-
-
-       self.Error_label = Label(self.loginFrame,text=" ")
-       self.Error_label.grid(row=0, column=1, padx=10, pady=10)
-
-
-       self.Username_label = Label(self.loginFrame,text="Username:").grid(row=1, column=0, padx=10, pady=10)
-       self.Password_label = Label(self.loginFrame,text="Password:").grid(row=2,column=0, padx=10, pady=10)
-
-
-       self.username_entry = Entry(self.loginFrame, width=50)
-       self.username_entry.grid(row=1, column=1, columnspan=2, padx=5)
-
-
-       self.password_entry = Entry(self.loginFrame,width = 50, show="*")
-       self.password_entry.grid(row =2, column=1, columnspan=2,padx=5)
-
-
-
-       # show and hide functions change the password from hiden to shown
-
-       def show():
-
-            toggle_button.config(text="hide ",command=lambda:hide(),relief="groove")
-            self.password_entry.config(show="")
-
-
-       def hide():
-
-
-            toggle_button.config(text="show ",command=lambda:show(),relief="groove")
-            self.password_entry.config(show="*")
+			# Change the buton's command to show and then hide the password
+			toggle_button.config(text="show ",command=lambda:show(),relief="groove")
+			self.password_entry.config(show="*")
    
+		# Button for showing and hiding the password
+		toggle_button = Button(self.loginFrame,text='show',command=lambda:show(),relief="groove")
+		toggle_button.grid(row=2, column=4, padx=5)
 
-       toggle_button = Button(self.loginFrame,text='show',command=lambda:show(),relief="groove")
-       toggle_button.grid(row=2, column=4, padx=5)
-
-
-       login_button = Button(self.loginFrame,text="          Login          ",relief="groove",command=lambda:self.check_login_validation()).grid(row=3,column=1,padx=100)
-       or_label = Label(self.loginFrame,text="or").grid(row=4,column=1,pady=10)
-       signup_button = Button(self.loginFrame,text='        sign up         ',relief="groove",command=lambda:self.create_new_login()).grid(row=5, column=1, padx=5)
-
-
+		# Place the login and signup buttons and also the label "or"
+		Button(self.loginFrame,text="Login",width=15,relief="groove",command=lambda:self.check_login_validation()).grid(row=3,column=1,padx=100)
+		Label(self.loginFrame,text="or").grid(row=4,column=1,pady=10)
+		Button(self.loginFrame,text="sign up",width=15,relief="groove",command=lambda:self.create_new_login()).grid(row=5, column=1, padx=5)
 
     # class method to check if the logins provided are correct
+	def check_login_validation(self):
 
-    def check_login_validation(self):
-
-
-        # calls class from different python file to check 
-
-        if Login.check_login(self.username_entry.get(), self.password_entry.get()):
-                
-
-                self.Error_label.config(text=f"Welcome back {self.username_entry.get()}",relief="raised",bg="green")
-                self.username_entry.delete(0, END)
-                self.password_entry.delete(0, END)
-                self.loginFrame.grid_remove()
-                self.graphingFrame.grid()
-                self.accept()
-               
-
-        else:
-
-
-            self.Error_label.config(text="Invalid Username or Password!",relief="raised",bg="red")
-            self.username_entry.delete(0, END)
-            self.password_entry.delete(0, END)
+        # Check if the username and password is correct
+		if Login.check_login(self.username_entry.get(), self.password_entry.get()):
             
- 
+			# Username and password is correct
+			# Run the main program
+			self.accept()
+
+		# Username or password is incorrect     
+		else:
+
+			# Show error label then clear the entries
+			self.Error_label.config(text="Invalid Username or Password!",relief="raised",bg="red")
+			self.username_entry.delete(0, END)
+			self.password_entry.delete(0, END)
+            
     # removes login widgets and places the sign up widgets
+	def create_new_login(self):
 
-    def create_new_login(self):
+		# remove loginFrame Frame and place the signupFrame
+		self.loginFrame.grid_remove()
+		self.signupFrame.grid()
 
+		# Change window title and size
+		win.title("Sign Up")
+		win.geometry("450x200")
 
-       self.loginFrame.grid_remove()
-       self.signupFrame.grid()
+		# Error label is invisible until we need to use it
+		self.Error_label = Label(self.signupFrame,text=" ")
+		self.Error_label.grid(row=0, column=1, padx=10, pady=10)
 
+		# Place Username and Password label
+		self.Username_label = Label(self.signupFrame,text="Username:").grid(row=1, column=0, padx=10, pady=10)
+		self.Password_label = Label(self.signupFrame,text="Password:").grid(row=2,column=0, padx=10, pady=10)
 
-       win.title("Sign Up")
-       win.geometry("450x200")
+		# Place the Username and Password entries
+		self.username_entry = Entry(self.signupFrame, width=50)
+		self.username_entry.grid(row=1, column=1, columnspan=2, padx=5)
+		self.password_entry = Entry(self.signupFrame,width = 50, show="*")
+		self.password_entry.grid(row =2, column=1, columnspan=2,padx=5)
 
+       	# show and hide functions change the password from hiden to shown
+		def show():
 
-       self.Error_label = Label(self.signupFrame,text=" ")
-       self.Error_label.grid(row=0, column=1, padx=10, pady=10)
+			# Change the button's command to hide and then show the password
+			toggle_button.config(text="hide ",command=lambda:hide(),relief="groove")
+			self.password_entry.config(show="")
 
+		def hide():
 
-       self.Username_label = Label(self.signupFrame,text="Username:").grid(row=1, column=0, padx=10, pady=10)
-       self.Password_label = Label(self.signupFrame,text="Password:").grid(row=2,column=0, padx=10, pady=10)
-
-
-       self.username_entry = Entry(self.signupFrame, width=50)
-       self.username_entry.grid(row=1, column=1, columnspan=2, padx=5)
-
-
-       self.password_entry = Entry(self.signupFrame,width = 50, show="*")
-       self.password_entry.grid(row =2, column=1, columnspan=2,padx=5)
-
-        
-
-       # show and hide functions change the password from hiden to shown
-
-       def show():
-
-
-            toggle_button.config(text="hide ",command=lambda:hide(),relief="groove")
-            self.password_entry.config(show="")
-
-
-       def hide():
-
-
-            toggle_button.config(text="show ",command=lambda:show(),relief="groove")
-            self.password_entry.config(show="*")
+			# Change the button's command to show and then hide the password
+			toggle_button.config(text="show ",command=lambda:show(),relief="groove")
+			self.password_entry.config(show="*")
    
-
-       toggle_button = Button(self.signupFrame,text='show',command=lambda:show(),relief="groove")
-       toggle_button.grid(row=2, column=4, padx=5)
+		# Button for showing and hiding the password
+		toggle_button = Button(self.signupFrame,text="show",command=lambda:show(),relief="groove")
+		toggle_button.grid(row=2, column=4, padx=5)
            
+		# Place the signup button
+		Button(self.signupFrame,text="sign up",width=15,relief="groove",command=lambda:self.validate_new_login()).grid(row=3, column=1, padx=100, pady=15)
 
-       signup_button = Button(self.signupFrame,text='          sign up         ',relief="groove",command=lambda:self.validate_new_login()).grid(row=3, column=1, padx=100, pady=15)
+	# Validates the sign up details using regular expressions
+	def validate_new_login(self):
 
+    	# If username and password passes the regular expressions 
+		if re.fullmatch("[A-Za-z0-9]{8,}", self.username_entry.get()) and re.fullmatch("[A-Za-z0-9._%+-^$£!*&]{8,}" , self.password_entry.get()) is not None:
 
+            # Passed regular expression
+            # Try to add the username and password to the database, 
+            # Check if the username doesnt already exist
+            # If it doesnt exist login is accepted
+			if Login.create_login(self.username_entry.get(), self.password_entry.get()):
 
-    # validates the sign up details using regular expression
+                #remove the signupFrame Frame and grid the loginFrame Frame
+				self.signupFrame.grid_remove()
+				self.loginFrame.grid()
 
-    def validate_new_login(self):
+                # Place all of the login widgets. Ajust the window size and rename the title
+				self.create_login_widgets()
+				win.geometry("450x250")
+				win.title("Login")
 
+            # Login already exists   
+			else:
 
-        if re.fullmatch("[A-Za-z0-9]{8,}", self.username_entry.get()) and re.fullmatch("[A-Za-z0-9._%+-^$£!*&]{8,}" , self.username_entry.get()) is not None:
+                # Show error label then clear the entries
+				self.Error_label.config(text="Username already exists!",relief="raised",bg="red")
+				self.username_entry.delete(0, END)
+				self.password_entry.delete(0, END)
 
+       	# Didnt pass regular expressions
+		else:
 
-            if Login.create_login(self.username_entry.get(), self.password_entry.get()):
-
-
-                self.Error_label.config(text="Username already exists!",relief="raised",bg="red")
-                self.username_entry.delete(0, END)
-                self.password_entry.delete(0, END)
-
-               
-            else:
-
-
-                self.signupFrame.grid_remove()
-                self.loginFrame.grid()
-                self.create_login_widgets()
-                win.geometry("450x250")
-                win.title("Login")
-
-
-        else:
-
-
-            self.Error_label.config(text="Invalid Username or Password!",relief="raised",bg="red")
-            self.username_entry.delete(0, END)
-            self.password_entry.delete(0, END)
-
-
+            # Show error label then clear the entries
+			self.Error_label.config(text="Invalid Username or Password!",relief="raised",bg="red")
+			self.username_entry.delete(0, END)
+			self.password_entry.delete(0, END)
 
     # accept state starts the new program
+	def accept(self):
 
-    def accept(self):
+		# remove the Validation window
+		win.destroy()
 
-       win.destroy()
+		global root, app, graph_list
+		root = Tk()
+		app = App(root)
+		graph_list = []
 
-       global root, app, graph_list
-       root = Tk()
-       app = App(root)
-       graph_list = []
-
-       root.bind("<comma>", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push(","), app.plot_entry.config(state = DISABLED)])
-       root.bind("0", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("0"), app.plot_entry.config(state = DISABLED)])
-       root.bind("1", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("1"), app.plot_entry.config(state = DISABLED)])
-       root.bind("2", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("2"), app.plot_entry.config(state = DISABLED)])
-       root.bind("3", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("3"), app.plot_entry.config(state = DISABLED)])
-       root.bind("4", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("4"), app.plot_entry.config(state = DISABLED)])
-       root.bind("5", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("5"), app.plot_entry.config(state = DISABLED)])
-       root.bind("6", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("6"), app.plot_entry.config(state = DISABLED)])
-       root.bind("7", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("7"), app.plot_entry.config(state = DISABLED)])
-       root.bind("8", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("8"), app.plot_entry.config(state = DISABLED)])
-       root.bind("9", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("9"), app.plot_entry.config(state = DISABLED)])
-       root.bind("<BackSpace>", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.pop(), app.plot_entry.config(state=DISABLED)])
-       root.bind("<period>", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("."), app.plot_entry.config(state = DISABLED)])
-       root.bind("(", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("("), app.plot_entry.config(state = DISABLED)])
-       root.bind(")", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push(")"), app.plot_entry.config(state = DISABLED)])
-       root.bind("!", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("fact"), app.plot_entry.config(state = DISABLED)])
-       root.bind("x", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("x"), app.plot_entry.config(state = DISABLED)])
-       root.bind("y", lambda x: [app.plot_entry.config(state = NORMAL), entry_stack.push("y"), app.plot_entry.config(state = DISABLED)])
-       root.bind("<Return>", lambda x:[app.plot_entry.configure(state = NORMAL), Graph_tools.plot_graph(app.plot_entry.get()), entry_stack.pull(), app.plot_entry.configure(state = DISABLED)])
+		root.bind("<comma>", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push(","), app.plot_entry.config(state = DISABLED)])
+		root.bind("0", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("0"), app.plot_entry.config(state = DISABLED)])
+		root.bind("1", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("1"), app.plot_entry.config(state = DISABLED)])
+		root.bind("2", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("2"), app.plot_entry.config(state = DISABLED)])
+		root.bind("3", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("3"), app.plot_entry.config(state = DISABLED)])
+		root.bind("4", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("4"), app.plot_entry.config(state = DISABLED)])
+		root.bind("5", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("5"), app.plot_entry.config(state = DISABLED)])
+		root.bind("6", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("6"), app.plot_entry.config(state = DISABLED)])
+		root.bind("7", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("7"), app.plot_entry.config(state = DISABLED)])
+		root.bind("8", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("8"), app.plot_entry.config(state = DISABLED)])
+		root.bind("9", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("9"), app.plot_entry.config(state = DISABLED)])
+		root.bind("<BackSpace>", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.pop(), app.plot_entry.config(state=DISABLED)])
+		root.bind("<period>", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("."), app.plot_entry.config(state = DISABLED)])
+		root.bind("(", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("("), app.plot_entry.config(state = DISABLED)])
+		root.bind(")", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push(")"), app.plot_entry.config(state = DISABLED)])
+		root.bind("!", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("fact"), app.plot_entry.config(state = DISABLED)])
+		root.bind("x", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("x"), app.plot_entry.config(state = DISABLED)])
+		root.bind("y", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("y"), app.plot_entry.config(state = DISABLED)])
+		root.bind("<Return>", lambda x:[app.plot_entry.configure(state = NORMAL), Graph_tools.plot_graph(app.plot_entry.get()), Entry_stack.pull(), app.plot_entry.configure(state = DISABLED)])
 
 
-       for x, y, fx in User_info.Load_func("2D"):
+		for x, y, fx in User_info.Load_func("2D"):
           
-              graph = app.ax.plot(x, y, color = "r")
+			graph = app.ax.plot(x, y, color = "r")
                             
-              app.fig_canvas.draw()
+			app.fig_canvas.draw()
 
-              app.mylist.insert(END, f" y = {fx}")
+			app.mylist.insert(END, f" y = {fx}")
 
-              User_info.Add_func("2D", fx, x, y)
+			User_info.Add_func("2D", fx, x, y)
 
-              graph_list.append(graph)
+			graph_list.append(graph)
 
-
-       root.mainloop()
+		root.mainloop()
 
 
 # Create class called App to be the main Tkinter Frame
@@ -367,109 +322,109 @@ class App(Frame):
               self.plot_entry.place(x = 6, y = 11)
 
 
-              # Buttons below when clicked insert a value to the entry using the entry_stack class
+              # Buttons below when clicked insert a value to the entry using the Entry_stack class
 
 
               Button(self.calculatorFrame , text="sin", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("sin"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("sin"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 70)
 
 
               Button(self.calculatorFrame , text="cos", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("cos"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("cos"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 109)
               
 
               Button(self.calculatorFrame , text="tan", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("tan"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("tan"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 148)
               
 
               Button(self.calculatorFrame , text="x", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("x"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("x"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 187)
               
 
               Button(self.calculatorFrame , text="y", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("y"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("y"), self.plot_entry.config(state = DISABLED)]
                ).place(x=5, y = 226)
 
 
 
               Button(self.calculatorFrame , text="^", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("^"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("^"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 70)
 
 
               Button(self.calculatorFrame , text="!", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("fact"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("fact"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 109)
               
 
               Button(self.calculatorFrame , text="log", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("log"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("log"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 148)
               
 
               Button(self.calculatorFrame , text="e", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("e"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("e"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 187)
               
 
               Button(self.calculatorFrame , text="π", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("pi"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("pi"), self.plot_entry.config(state = DISABLED)]
                ).place(x=70, y = 226)
 
 
 
               Button(self.calculatorFrame , text="(", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("("), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("("), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 70)
               
 
               Button(self.calculatorFrame , text="1", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("1"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("1"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 109)
               
 
               Button(self.calculatorFrame , text="4", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("4"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("4"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 148)
 
 
               Button(self.calculatorFrame , text="7", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("7"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("7"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 187)
 
 
               Button(self.calculatorFrame , text="0", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("0"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("0"), self.plot_entry.config(state = DISABLED)]
                ).place(x=135, y = 226)
               
 
 
               Button(self.calculatorFrame , text=")", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push(")"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push(")"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 70)
 
 
               Button(self.calculatorFrame , text="2", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("2"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("2"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 109)
               
 
               Button(self.calculatorFrame , text="5", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("5"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("5"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 148)
 
 
               Button(self.calculatorFrame , text="8", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("8"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("8"), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 187)
               
 
               Button(self.calculatorFrame , text=".", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("."), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("."), self.plot_entry.config(state = DISABLED)]
                ).place(x=200, y = 226)
 
 
@@ -477,23 +432,23 @@ class App(Frame):
 
 
               Button(self.calculatorFrame , text="Delete", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL), entry_stack.pop(), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL), Entry_stack.pop(), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 70)
         
 
 
               Button(self.calculatorFrame , text="3", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("3"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("3"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 109)
 
 
               Button(self.calculatorFrame , text="6", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("6"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("6"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 148)
 
 
               Button(self.calculatorFrame , text="9", width= 5, font = "Arial 15", bg = "#3c4043", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("9"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("9"), self.plot_entry.config(state = DISABLED)]
                ).place(x=265, y = 187)
               
 
@@ -501,7 +456,7 @@ class App(Frame):
               # button also clears plot_entry
         
               Button(self.calculatorFrame , text = "Plot", width = 5, font = "Arial 15", bg = "#8ab4f8", fg = "#202124", command=
-               lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
+               lambda:[self.plot_entry.config(state = NORMAL), Graph_tools.plot_graph(self.plot_entry.get()), Entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
                ).place(x = 265, y = 226)
 
 
@@ -509,27 +464,27 @@ class App(Frame):
 
 
               Button(self.calculatorFrame , text="Clear", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL), entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL), Entry_stack.pull(), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 70)
               
 
               Button(self.calculatorFrame , text="÷", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("/"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("/"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 109)
               
 
               Button(self.calculatorFrame , text="*", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("*"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("*"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 148)
               
 
               Button(self.calculatorFrame , text="-", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("-"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("-"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 187)
               
 
               Button(self.calculatorFrame , text="+", width= 5, font = "Arial 15", bg = "#5f6368", fg = "#e8eaed", command= 
-               lambda: [self.plot_entry.config(state = NORMAL) , entry_stack.push("+"), self.plot_entry.config(state = DISABLED)]
+               lambda: [self.plot_entry.config(state = NORMAL) , Entry_stack.push("+"), self.plot_entry.config(state = DISABLED)]
                ).place(x=330, y = 226)
               
               
@@ -907,7 +862,7 @@ class Graph_tools(App):
 
 
                             # remove graph and data
-                            # push function back into the entry_stack
+                            # push function back into the Entry_stack
 
                             User_info.Del_func((app.mylist.get(is_selected[0]))[5:], "2D")
 
@@ -923,7 +878,7 @@ class Graph_tools(App):
 
               
                             app.plot_entry.config(state=NORMAL)
-                            entry_stack.strip_push((app.mylist.get(is_selected[0]))[5:])
+                            Entry_stack.strip_push((app.mylist.get(is_selected[0]))[5:])
                             app.plot_entry.config(state=DISABLED)
 
                             app.mylist.delete(is_selected[0])
@@ -936,7 +891,7 @@ class Graph_tools(App):
 
 
                             # remove graph and data
-                            # push function back into the entry_stack
+                            # push function back into the Entry_stack
 
                      
 
@@ -951,7 +906,7 @@ class Graph_tools(App):
 
               
                             app.plot_entry.config(state=NORMAL)
-                            entry_stack.strip_push((app.mylist.get(is_selected[0]))[5:])
+                            Entry_stack.strip_push((app.mylist.get(is_selected[0]))[5:])
                             app.plot_entry.config(state=DISABLED)
 
                             app.mylist.delete(is_selected[0])
@@ -1128,7 +1083,16 @@ class Index(App):
 
 
 
-class entry_stack:
+class Entry_stack:
+    
+    """
+    Entry_stack is a class to help enforce that the Tkinter entry for the calculator stays secure and error proof.\n
+    Inside Entry_stack is an array which we use as a stack and a dictionary which is used to correctly format a string 
+
+    
+    
+    
+    """
 
 
     stack = []
@@ -1158,29 +1122,29 @@ class entry_stack:
     def push(val):
         
 
-        entry_stack.stack.append(entry_stack.dic[val])
-        app.plot_entry.insert(END, entry_stack.dic[val])
+        Entry_stack.stack.append(Entry_stack.dic[val])
+        app.plot_entry.insert(END, Entry_stack.dic[val])
 
 
     @staticmethod
     def pop():
 
 
-        if len(entry_stack.stack) > 0:
+        if len(Entry_stack.stack) > 0:
             
 
-            app.plot_entry.delete(app.plot_entry.index("end") - len(entry_stack.stack[-1]), END)
-            entry_stack.stack.pop(-1)
+            app.plot_entry.delete(app.plot_entry.index("end") - len(Entry_stack.stack[-1]), END)
+            Entry_stack.stack.pop(-1)
 
     @staticmethod
     def pull():
         
 
-        if len(entry_stack.stack) > 0:
+        if len(Entry_stack.stack) > 0:
             
 
             app.plot_entry.delete(0, END)
-            entry_stack.stack.clear()
+            Entry_stack.stack.clear()
 
 
     @staticmethod
@@ -1196,10 +1160,10 @@ class entry_stack:
                 string += char
 
 
-                if string in entry_stack.dic:
+                if string in Entry_stack.dic:
                       
 
-                      entry_stack.push(string)
+                      Entry_stack.push(string)
                       string = ""
 
 
@@ -1300,8 +1264,8 @@ class dim3_rotation_matrix:
 
 if __name__ == "__main__":
     
-    win = Tk()
-    win.geometry("450x250+300+300")
-    val = Val(win)
-    win.overrideredirect(True)
-    win.mainloop()
+	win = Tk()
+	win.geometry("450x250+300+300")
+	val = Val(win)
+	win.overrideredirect(True)
+	win.mainloop()
