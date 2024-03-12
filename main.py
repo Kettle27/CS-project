@@ -167,6 +167,13 @@ class Val(Frame):
         root.bind("!", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("fact"), app.plot_entry.config(state = DISABLED)])
         root.bind("x", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("x"), app.plot_entry.config(state = DISABLED)])
         root.bind("y", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("y"), app.plot_entry.config(state = DISABLED)])
+        root.bind("e", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("e"), app.plot_entry.config(state = DISABLED)])
+        root.bind("*", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("*"), app.plot_entry.config(state = DISABLED)])
+        root.bind("+", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("+"), app.plot_entry.config(state = DISABLED)])
+        root.bind("-", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("-"), app.plot_entry.config(state = DISABLED)])
+        root.bind("/", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("/"), app.plot_entry.config(state = DISABLED)])
+        root.bind("^", lambda x: [app.plot_entry.config(state = NORMAL), Entry_stack.push("^"), app.plot_entry.config(state = DISABLED)])
+
         root.bind("<Return>", lambda x:[app.plot_entry.configure(state = NORMAL), Graph_tools.plot_graph(app.plot_entry.get()), Entry_stack.pull(), app.plot_entry.configure(state = DISABLED)])
         # Plot graphs that the user has saved
         # User_info.Load_func() accesses the database to get the x and y values associated with a function
@@ -329,6 +336,11 @@ class App(Frame):
         lambda:Graph_tools.delete_graph()
         ).place(x=203, y=461)
         # Below is a Tkinter slider and label which represents the theta value of when we want to rotate a graph
+        
+        self.rotation_Frame = Frame(self.meta_dataFrame, width= 790, height=135, background="#3c4043", relief="raised", bg = "#5f6368", borderwidth=6)
+        self.rotation_Frame.place(x=10, y=10)
+        
+        
         self.slider_label = Label(self.meta_dataFrame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
         self.slider_label.place(x=80,y=10)
         self.slider = Scale(self.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
@@ -373,6 +385,23 @@ class App(Frame):
         toolbar.update()
         toolbar.pack(side = BOTTOM, fill = X)
         self.fig_canvas.get_tk_widget().pack()
+
+        self.interval_Frame = Frame(self.calculatorFrame, width= 385, height=170, background="#3c4043", relief="raised", bg = "#5f6368", borderwidth=6)
+        self.interval_Frame.place(x=10,y=520)
+
+        self.slider1 = Scale(self.interval_Frame, from_=-100, to=100, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 160)
+        self.slider1.place(x=10,y=100)
+        self.slider1.set(-25)
+
+        self.slider2 = Scale(self.interval_Frame, from_=-100, to=100, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 160)
+        self.slider2.place(x=195,y=100)
+        self.slider2.set(25)
+
+        self.slider3 = Scale(self.interval_Frame, from_=100, to=100000, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 345)
+        self.slider3.place(x=10, y=20)
+        self.slider3.set(40000)
+
+
 # Class Graph_tools does all the graphing calculations and editing graphs
 class Graph_tools(App):
     # Staticmetod plot_graph runs calculations to plot the equations given
@@ -399,17 +428,17 @@ class Graph_tools(App):
                 # The method will try and do the calculations
                 # If it fails it does not plot anything
                 try:
-                    """                
-                    How 2D plotting works:
-                ---------------------------------------------------------------------------------
-                    we get a list with 40000 elements between -25 and 25
-                    this is used as our x values
-                    list comprehension is used to iterate through our x values
-                    catch(fx, x) will calculate y using eval(fx) but if it returns an error like
-                    ZeroDivisionError it returns a Null type.
-                    Once y is calculated it is plotted.
-                ---------------------------------------------------------------------------------
-                    """
+               
+#    How 2D plotting works:
+#---------------------------------------------------------------------------------
+#    we get a list with 40000 elements between -25 and 25
+#    this is used as our x values
+#    list comprehension is used to iterate through our x values
+#    catch(fx, x) will calculate y using eval(fx) but if it returns an error like
+#    ZeroDivisionError it returns a Null type.
+#    Once y is calculated it is plotted.
+#---------------------------------------------------------------------------------
+
                     def catch(fx, x):
                         try:
                             return eval(fx)
@@ -453,28 +482,28 @@ class Graph_tools(App):
                 # The method will try and do the calculations
                 # If it fails it does not plot anything
                 try:
-                    """
-                    How 3d plotting works:
-                ------------------------------------------------------------------------------------------------------
-                    First we get a list with 100 elements between -10,10 (100 has been chosen to maintain lag).
-                    Next we use this list to make a matrix (X) which has the size: length of list x length of list
-                    we use matrix X as the x values of our graph.
-                    After we make a new matrix (Y) which is the transposed matrix of matrix X
-                    transposing a matrix switches the row and columns of a matrix.
-                    For example:
-                    X = [1,2,3]    Y = [1,1,1]
-                        [1,2,3]        [2,2,2]
-                        [1,2,3]        [3,3,3]
-                    Finally we can get our z values by subbing in X and Y into the equation given.
-                    To do this we need to iterate through the matrices and add the values into a new matrix (Z).
-                    For example using the function z = x + y:
-                    X = [1,2,3]    Y = [1,1,1]    Z = [2,3,4]
-                        [1,2,3]        [2,2,2]        [3,4,5]
-                        [1,2,3]        [3,3,3]        [4,5,6]
-                    Once we have the matrices X,Y,Z we can now plot our graph
-                    which uses the matplotlib plot_surface function
-                ------------------------------------------------------------------------------------------------------
-                    """
+                    
+#    How 3d plotting works:
+#------------------------------------------------------------------------------------------------------
+#    First we get a list with 100 elements between -10,10 (100 has been chosen to maintain lag).
+#    Next we use this list to make a matrix (X) which has the size: length of list x length of list
+#    we use matrix X as the x values of our graph.
+#    After we make a new matrix (Y) which is the transposed matrix of matrix X
+#    transposing a matrix switches the row and columns of a matrix.
+#    For example:
+#    X = [1,2,3]    Y = [1,1,1]
+#        [1,2,3]        [2,2,2]
+#        [1,2,3]        [3,3,3]
+#    Finally we can get our z values by subbing in X and Y into the equation given.
+#    To do this we need to iterate through the matrices and add the values into a new matrix (Z).
+#    For example using the function z = x + y:
+#    X = [1,2,3]    Y = [1,1,1]    Z = [2,3,4]
+#        [1,2,3]        [2,2,2]        [3,4,5]
+#        [1,2,3]        [3,3,3]        [4,5,6]
+#    Once we have the matrices X,Y,Z we can now plot our graph
+#    which uses the matplotlib plot_surface function
+#------------------------------------------------------------------------------------------------------
+                    
                     x = range_x(-10, 10, 100)
                     X = ([x for i in x])
                     Y = ([[X[j][i] for j in range(len(X))] for i in range(len(X[0]))])
