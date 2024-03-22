@@ -336,16 +336,13 @@ class App(Frame):
         lambda:Graph_tools.delete_graph()
         ).place(x=203, y=461)
         # Below is a Tkinter slider and label which represents the theta value of when we want to rotate a graph
-        
         self.rotation_Frame = Frame(self.meta_dataFrame, width= 790, height=135, background="#3c4043", relief="raised", bg = "#5f6368", borderwidth=6)
         self.rotation_Frame.place(x=10, y=10)
-        
-        
-        self.slider_label = Label(self.meta_dataFrame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
+        self.slider_label = Label(self.rotation_Frame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
         self.slider_label.place(x=80,y=10)
-        self.slider = Scale(self.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+        self.slider = Scale(self.rotation_Frame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
         lambda x :dim2_rotation_matrix())
-        self.slider.place(x=10,y=50)
+        self.slider.place(x=10,y=45)
         # Added Tkinter Scrollbar to scroll on the Listbox if needed
         # Tkinter Scrollbar is attacted to the entire right side of the Listbox
         self.scrollbar = Scrollbar(self.calculatorFrame2 , width = 20)
@@ -400,8 +397,6 @@ class App(Frame):
         self.slider3 = Scale(self.interval_Frame, from_=100, to=100000, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 345)
         self.slider3.place(x=10, y=20)
         self.slider3.set(40000)
-
-
 # Class Graph_tools does all the graphing calculations and editing graphs
 class Graph_tools(App):
     # Staticmetod plot_graph runs calculations to plot the equations given
@@ -632,11 +627,11 @@ class Index(App):
         app.slider_labely.destroy()
         app.slider_labelz.destroy()
         # Place slider and label
-        app.slider_label = Label(app.meta_dataFrame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
+        app.slider_label = Label(app.rotation_Frame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
         app.slider_label.place(x=80,y=10)
-        app.slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+        app.slider = Scale(app.rotation_Frame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
         lambda x :dim2_rotation_matrix())
-        app.slider.place(x=10,y=50)
+        app.slider.place(x=10,y=45)
     # Change to 3D
     def dim3(self):
         # Remove the axes and delete all data
@@ -674,27 +669,25 @@ class Index(App):
         app.slider.destroy()
         app.slider_label.destroy()
         # Place 3 new sliders and labels for the combined 3D rotating
-        app.slider_labelx = Label(app.meta_dataFrame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
+        app.slider_labelx = Label(app.rotation_Frame, text = "x_axis", font= "Arial 15", bg = "#e8eaed")
         app.slider_labelx.place(x=80,y=10)
-        app.slider_labely = Label(app.meta_dataFrame, text = "y_axis", font= "Arial 15", bg = "#e8eaed")
-        app.slider_labely.place(x=300,y=10)
-        app.slider_labelz = Label(app.meta_dataFrame, text = "z_axis", font= "Arial 15", bg = "#e8eaed")
-        app.slider_labelz.place(x=510,y=10)
-        app.x_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+        app.slider_labely = Label(app.rotation_Frame, text = "y_axis", font= "Arial 15", bg = "#e8eaed")
+        app.slider_labely.place(x=310,y=10)
+        app.slider_labelz = Label(app.rotation_Frame, text = "z_axis", font= "Arial 15", bg = "#e8eaed")
+        app.slider_labelz.place(x=530,y=10)
+        app.x_slider = Scale(app.rotation_Frame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
         lambda x :dim3_rotation_matrix())
-        app.x_slider.place(x=10,y=50)
-        app.y_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+        app.x_slider.place(x=10,y=45)
+        app.y_slider = Scale(app.rotation_Frame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
         lambda x :dim3_rotation_matrix())
-        app.y_slider.place(x=220,y=50)
-        app.z_slider = Scale(app.meta_dataFrame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
+        app.y_slider.place(x=235,y=45)
+        app.z_slider = Scale(app.rotation_Frame, from_=0, to=360, bg = "#5f6368", fg = "#e8eaed", troughcolor= "#5f6368", borderwidth= 3, orient= HORIZONTAL, length= 200, command=
         lambda x :dim3_rotation_matrix())
-        app.z_slider.place(x=430,y=50)
+        app.z_slider.place(x=460,y=45)
 class Entry_stack:
-    """
-    Entry_stack is a class to help enforce that the Tkinter entry for the calculator stays secure and error proof.\n
-    Inside Entry_stack is an array which we use as a stack and a dictionary which is used to correctly format a string
-    and used to break down strings to be put into the stack
-    """
+# Entry_stack is a class to help enforce that the Tkinter entry for the calculator stays secure and error proof.\n
+# Inside Entry_stack is an array which we use as a stack and a dictionary which is used to correctly format a string
+# and used to break down strings to be put into the stack
     stack = []
     dic = {"fact" : "fact",
            "sin" : "sin", "cos": "cos",
